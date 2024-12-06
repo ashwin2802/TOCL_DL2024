@@ -60,3 +60,34 @@ def compute_backward_transfer_matrix(accuracy_matrix: torch.Tensor):
         backward_transfer[k] = tmp / k
 
     return backward_transfer
+
+import json
+import torch
+
+# Assuming args.res_file is the file path where results will be saved
+def save_results_to_file(file_path, accuracy_matrix, average_accuracy, average_incremental_accuracy, forgetting_measure, backward_transfer):
+    """
+    Save results to a JSON file instead of printing.
+
+    Parameters:
+    - args: Argument object containing `res_file` (output file path).
+    - accuracy_matrix: PyTorch 2D tensor of accuracies.
+    - average_accuracy: PyTorch 1D tensor or scalar tensor.
+    - average_incremental_accuracy: PyTorch 1D tensor or scalar tensor.
+    - forgetting_measure: PyTorch 1D tensor or scalar tensor.
+    - backward_transfer: PyTorch 1D tensor or scalar tensor.
+    """
+    # Convert tensors to Python-native types
+    results = {
+        "accuracy_matrix": accuracy_matrix.tolist(),  # Convert 2D tensor to nested list
+        "average_accuracy": average_accuracy.tolist() if average_accuracy.dim() > 0 else average_accuracy.item(),
+        "average_incremental_accuracy": average_incremental_accuracy.tolist() if average_incremental_accuracy.dim() > 0 else average_incremental_accuracy.item(),
+        "forgetting_measure": forgetting_measure.tolist() if forgetting_measure.dim() > 0 else forgetting_measure.item(),
+        "backward_transfer": backward_transfer.tolist() if backward_transfer.dim() > 0 else backward_transfer.item()
+    }
+
+    # Save results to the specified file in JSON format
+    with open(file_path, 'w') as f:
+        json.dump(results, f, indent=4)
+
+    print(f"Results successfully saved to {file_path}")

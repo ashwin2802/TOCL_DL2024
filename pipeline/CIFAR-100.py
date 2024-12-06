@@ -127,12 +127,8 @@ def main(args):
     forgetting_measure = compute_forgetting_matrix(accuracy_matrix)
     backward_transfer = compute_backward_transfer_matrix(accuracy_matrix)
 
-    print(f"accuracy_matrix matrix: {accuracy_matrix}")
-    print(f"average_accuracy: {average_accuracy}")
-    print(f"average_incremental_accuracy: {average_incremental_accuracy}")
-    print(f"forgetting_measure: {forgetting_measure}")
-    print(f"backward_transfer: {backward_transfer}")
-
+    save_results_to_file(args.res_file, accuracy_matrix, average_accuracy, average_incremental_accuracy, forgetting_measure, backward_transfer)
+    
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -144,7 +140,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--data_dir", 
         type=str,
-        default="/scratch/rrigoni/dl_project", 
+        default="/cluster/scratch/rrigoni/dl_project/CIFAR-100", 
+        help="directory where to store the datasets for the experiments"
+    )
+    parser.add_argument(
+        "--res_path", 
+        type=str,
+        default="/home/rrigoni/TOCL_DL2024/results/CIFAR-100.json", 
         help="directory where to store the datasets for the experiments"
     )
 
