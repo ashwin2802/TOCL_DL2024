@@ -25,6 +25,8 @@ def compute_average_accuracy_matrix(accuracy_matrix: torch.Tensor):
 
         average_accuracy[i] = tmp / (i + 1)
 
+    return average_accuracy
+
 def compute_average_incremental_accuracy_matrix(average_accuracy_matrix: torch.Tensor):
     average_incremental_accuracy = torch.zeros(average_accuracy_matrix.shape[0])
 

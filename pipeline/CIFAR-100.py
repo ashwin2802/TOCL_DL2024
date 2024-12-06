@@ -25,8 +25,8 @@ from torchvision.transforms import ToTensor
 import torch.optim.lr_scheduler
 from avalanche.benchmarks import nc_benchmark
 from avalanche.models import pytorchcv_wrapper
-from avalanche.training.supervised import Naive
-from avalanche.training.plugins import ReplayPlugin
+from avalanche.training.supervised import Naive, Cumulative, ICaRL
+from avalanche.training.plugins import ReplayPlugin, EWCPlugin, GEMPlugin
 from avalanche.evaluation.metrics import (
     forgetting_metrics,
     accuracy_metrics,
@@ -39,8 +39,11 @@ from compute_metrics import *
 
 
 def main(args):
-    # Model getter: specify dataset and depth of the network.
-    model = pytorchcv_wrapper.resnet("cifar100", depth=20, pretrained=False)
+    if args['model_name'] == "resnet":
+        # Model getter: specify dataset and depth of the network.
+        model = pytorchcv_wrapper.resnet("cifar100", depth=args['depth'], pretrained=False)
+    else: 
+        raise Exception(f"Unsupported model {args['model_name']}")
 
     # Or get a more specific model. E.g. wide resnet, with depth 40 and growth
     # factor 8 for Cifar 10.
@@ -48,8 +51,15 @@ def main(args):
 
     # --- CONFIG
     device = torch.device(
-        f"cuda:{args.cuda}" if torch.cuda.is_available() and args.cuda >= 0 else "cpu"
+        f"cuda" if torch.cuda.is_available() else "cpu"
     )
+
+    # feature_extractor = torch.nn.Sequential(*list(model.children())[:-1])  # Remove the last layer
+
+    # x = torch.rand((3, 32, 32), device=device)
+    # output = feature_extractor(x)
+
+    # print(f"output.shape: {output.shape}")
 
     # --- TRANSFORMATIONS
     transform = transforms.Compose(
@@ -63,14 +73,14 @@ def main(args):
     cifar_train = CIFAR100(
         # we specify the root where to store the data
         # root=expanduser("~") + "/.avalanche/data/cifar100/",
-        root=args.data_dir,
+        root=args['data_dir'],
         train=True,
         download=True,
         transform=transform,
     )
     cifar_test = CIFAR100(
         # root=expanduser("~") + "/.avalanche/data/cifar100/",
-        root=args.data_dir,
+        root=args['data_dir'],
         train=False,
         download=True,
         transform=transform,
@@ -78,36 +88,127 @@ def main(args):
     benchmark = nc_benchmark(
         cifar_train,
         cifar_test,
-        5,
+        args['num_tasks'],
         task_labels=False,
         seed=1234,
-        fixed_class_order=[i for i in range(100)],
+        # fixed_class_order=[i for i in range(100)],
     )
 
     # choose some metrics and evaluation method
-    # interactive_logger = InteractiveLogger()
-    text_logger = TextLogger(open("results/CIFAR-100.txt", "w"))
+    interactive_logger = InteractiveLogger()
+    # text_logger = TextLogger(open("results/CIFAR-100.txt", "w"))
 
     eval_plugin = EvaluationPlugin(
         accuracy_metrics(minibatch=False, epoch=False, experience=True, stream=False),
         # loss_metrics(minibatch=True, epoch=True, experience=True, stream=True),
         # forgetting_metrics(experience=True),
-        loggers=[text_logger],
+        loggers=[interactive_logger],
     )
 
     # CREATE THE STRATEGY INSTANCE (Naive, with Replay)
-    cl_strategy = Naive(
-        model,
-        torch.optim.SGD(model.parameters(), lr=0.01),
-        CrossEntropyLoss(),
-        train_mb_size=100,
-        train_epochs=10,
-        eval_mb_size=100,
-        device=device,
-        # plugins=[ReplayPlugin(mem_size=1000)],
-        evaluator=eval_plugin,
-    )
+    if args['strategy'] == "naive": 
+        cl_strategy = Naive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "naive-w-replay":
+        cl_strategy = Naive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[ReplayPlugin(mem_size=5120)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "naive-w-ewc": 
+        print(f"strategy: naive-w-ewc")
+        cl_strategy = Naive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[EWCPlugin(ewc_lambda=10.0)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "naive-w-gem": 
+        print(f"strategy: naive-w-gem")
+        cl_strategy = Naive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[GEMPlugin(5120, 0.5)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "cumulative": 
+        cl_strategy = Cumulative(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            # plugins=[ReplayPlugin(mem_size=1000)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "icarl": 
+        # Separate the feature extractor and the classification head
+        # feature_extractor = torch.nn.Sequential(*list(model.children())[:-1])  # Remove the last layer
+        # classification_head = model.fc if hasattr(model, 'fc') else model.output  # Get the classification head
+        
+        model.output = torch.nn.Identity()
+        classification_head = torch.nn.Linear(in_features=64, out_features=100)
+        import itertools
 
+        # Combine parameters from feature_extractor and classification_head
+        params = itertools.chain(model.parameters(), classification_head.parameters())
+
+        print(f"model: {model}")
+
+        print("stragety: icarl")
+        cl_strategy = ICaRL(
+            model,
+            classification_head,
+            torch.optim.Adam(params, lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            5120,
+            None,
+            True,
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            # plugins=[ReplayPlugin(mem_size=1000)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "naive-w-gem": 
+        print("strategy: naive-w-gem")
+        cl_strategy = Naive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[GEMPlugin(5120, 0.5)],
+            evaluator=eval_plugin,
+        )
     # TRAINING LOOP
     print("Starting experiment...")
     results = []
@@ -119,36 +220,42 @@ def main(args):
         print("Computing accuracy on the whole test set")
         results.append(cl_strategy.eval(benchmark.test_stream))
 
-    accuracy_matrix = compute_accuracy_matrix(results)
+    accuracy_matrix = compute_accuracy_matrix(results, args['num_tasks'])
 
-    average_accuracy = compute_accuracy_matrix(accuracy_matrix)
+    average_accuracy = compute_average_accuracy_matrix(accuracy_matrix)
     average_incremental_accuracy = compute_average_incremental_accuracy_matrix(average_accuracy)
 
     forgetting_measure = compute_forgetting_matrix(accuracy_matrix)
     backward_transfer = compute_backward_transfer_matrix(accuracy_matrix)
 
-    save_results_to_file(args.res_file, accuracy_matrix, average_accuracy, average_incremental_accuracy, forgetting_measure, backward_transfer)
+    file_path = args['res_file_template'].format(args['model_name'], args['depth'], args['num_tasks'], args['strategy'])
+    save_results_to_file(file_path, accuracy_matrix, average_accuracy, average_incremental_accuracy, forgetting_measure, backward_transfer)
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--cuda",
-        type=int,
-        default=0,
-        help="Select zero-indexed cuda device. -1 to use CPU.",
-    )
-    parser.add_argument(
-        "--data_dir", 
+        "--config",
         type=str,
-        default="/cluster/scratch/rrigoni/dl_project/CIFAR-100", 
-        help="directory where to store the datasets for the experiments"
+        help=""
     )
-    parser.add_argument(
-        "--res_path", 
-        type=str,
-        default="/home/rrigoni/TOCL_DL2024/results/CIFAR-100.json", 
-        help="directory where to store the datasets for the experiments"
-    )
+    
+    # parser.add_argument(
+    #     "--data_dir", 
+    #     type=str,
+    #     default="/cluster/scratch/rrigoni/dl_project/CIFAR-100", 
+    #     help=""
+    # )
+    # parser.add_argument(
+    #     "--res_file_template", 
+    #     type=str,
+    #     default="/home/rrigoni/TOCL_DL2024/results/CIFAR-100_{}_{}_tasks_{}.json", 
+    #     help=""
+    # )
+    # parser.add_arguemnt
 
     args = parser.parse_args()
-    main(args)
+
+    with open(args.config, 'r') as f: 
+        config = json.load(f)
+
+    main(config)
