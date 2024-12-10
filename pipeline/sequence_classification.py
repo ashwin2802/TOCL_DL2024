@@ -40,48 +40,6 @@ class CustomDataCollatorSeq2SeqBeta:
     return_tensors: str = "pt"
 
     def __call__(self, features, return_tensors=None):
-        # if return_tensors is None:
-        #     return_tensors = self.return_tensors
-        # labels = (
-        #     [feature["labels"] for feature in features]
-        #     if "labels" in features[0].keys()
-        #     else None
-        # )
-        # print(f"\n\n\nfeatures: {features}")
-        # # We have to pad the labels before calling `tokenizer.pad` as this
-        # # method won't pad them and needs them of the
-        # # same length to return tensors.
-        # if labels is not None:
-        #     print(f"inside collator: {labels}")
-        #     # max_label_length = max(len(lab) for lab in labels)
-        #     max_label_length = len(labels)
-        #     if self.pad_to_multiple_of is not None:
-        #         max_label_length = (
-        #             (max_label_length + self.pad_to_multiple_of - 1)
-        #             // self.pad_to_multiple_of
-        #             * self.pad_to_multiple_of
-        #         )
-
-        #     padding_side = self.tokenizer.padding_side
-        #     for feature in features:
-        #         remainder = [self.label_pad_token_id] * (
-        #             max_label_length - len(feature["labels"])
-        #         )
-        #         if isinstance(feature["labels"], list):
-        #             feature["labels"] = (
-        #                 feature["labels"] + remainder
-        #                 if padding_side == "right"
-        #                 else remainder + feature["labels"]
-        #             )
-        #         elif padding_side == "right":
-        #             feature["labels"] = np.concatenate(
-        #                 [feature["labels"], remainder]
-        #             ).astype(np.int64)
-        #         else:
-        #             feature["labels"] = np.concatenate(
-        #                 [remainder, feature["labels"]]
-        #             ).astype(np.int64)
-
         features = self.tokenizer.pad(
             features,
             padding=self.padding,
@@ -90,10 +48,7 @@ class CustomDataCollatorSeq2SeqBeta:
             return_tensors='pt',
         )
 
-        # prepare decoder_input_ids
         if (
-            # labels is not None
-            # and self.model is not None
             self.model is not None
             and hasattr(self.model, "prepare_decoder_input_ids_from_labels")
         ):
@@ -141,21 +96,11 @@ class HGNaive(avalanche.training.Naive):
         Move tensors to the current device."""
 
         from torch.nn.utils.rnn import pad_sequence
-        # Pad and stack along dimension 0 (batch dimension)
-        # batched_input_ids = pad_sequence(self.mbatch["input_ids"], batch_first=True, padding_value=0).to(self.device)
-        # batched_attention_mask = pad_sequence(self.mbatch["attention_mask"], batch_first=True, padding_value=0).to(self.device)
-        # print(f"self.mbatch['input_ids']: {self.mbatch['input_ids']}")
-
         batched_input_ids = torch.stack(self.mbatch["input_ids"], dim=1) if not isinstance(self.mbatch["input_ids"], torch.Tensor) else self.mbatch["input_ids"]
         batched_attention_mask = torch.stack(self.mbatch["attention_mask"], dim=1) if not isinstance(self.mbatch['attention_mask'], torch.Tensor) else self.mbatch['attention_mask']
 
         self.mbatch["attention_mask"] = batched_attention_mask
         self.mbatch["input_ids"] = batched_input_ids
-        # print(f"attention_mask.shape: {self.mbatch['attention_mask'].shape}\ninput_ids.shape: {self.mbatch['input_ids'].shape}")
-        # print(f"self.mbatch: {self.mbatch}")
-        # for k in self.mbatch.keys():
-        #     for j in range(len(self.mbatch[k])):
-        #         self.mbatch[k][j] = self.mbatch[k][j].to(self.device)
 
     def forward(self):
         out = self.model(
@@ -169,49 +114,6 @@ class HGNaive(avalanche.training.Naive):
         mb_output = self.mb_output.view(-1, self.mb_output.size(-1))
         ll = self._criterion(mb_output, self.mb_y.view(-1))
         return ll
-
-# # Parameters for synthetic data generation
-# NUM_DOMAINS = 3
-# SAMPLES_PER_DOMAIN = 320
-# MAX_SEQ_LENGTH = 20
-# LABELS = [0, 1]  # Binary classification (0 = negative, 1 = positive)
-
-# # Generate random text
-# def generate_random_text(max_length):
-#     words = ["good", "bad", "neutral", "happy", "sad", "amazing", "terrible", "excellent", "horrible"]
-#     length = random.randint(5, max_length)
-#     return " ".join(random.choices(words, k=length))
-
-# # Generate synthetic dataset
-# synthetic_data = {"domain": [], "text": [], "label": []}
-
-# for domain_id in range(NUM_DOMAINS):
-#     domain_name = f"domain_{domain_id}"
-#     for _ in range(SAMPLES_PER_DOMAIN):
-#         synthetic_data["domain"].append(domain_name)
-#         synthetic_data["text"].append(generate_random_text(MAX_SEQ_LENGTH))
-#         synthetic_data["label"].append(random.choice(LABELS))
-
-# # Convert to DataFrame
-# df = pd.DataFrame(synthetic_data)
-
-# # Split each domain into train and test
-# train_datasets = []
-# test_datasets = []
-# for domain_name in df["domain"].unique():
-#     domain_df = df[df["domain"] == domain_name]
-#     train_size = int(len(domain_df) * 0.8)
-#     train_df = domain_df[:train_size]
-#     test_df = domain_df[train_size:]
-#     train_datasets.append(Dataset.from_pandas(train_df))
-#     test_datasets.append(Dataset.from_pandas(test_df))
-
-# # Combine train datasets for all domains
-# train_dataset = concatenate_datasets(train_datasets)
-
-# # Combine test datasets for all domains
-# test_dataset = concatenate_datasets(test_datasets)
-# dataset = DatasetDict({"train": train_dataset, "test": test_dataset})
 
 # Check dataset structure
 # Load the dataset
@@ -249,8 +151,11 @@ def preprocess_function(examples):
 print(f"datasets before processing: {dataset}")
 
 dataset = filter_none_entries(dataset)
+# Slice to include only the first 20 entries
+
 train_dataset = Dataset.from_dict(dataset["train"])
 test_dataset = Dataset.from_dict(dataset["test"])
+
 
 # Combine into a DatasetDict
 dataset = DatasetDict({
@@ -259,35 +164,6 @@ dataset = DatasetDict({
 })
 
 dataset = dataset.map(preprocess_function, batched=True)
-
-# Apply preprocessing
-# tokenized_dataset = {"train": {"input_ids": [], "attention_mask": [], "labels": [], "domain": []}, "test": {"input_ids": [], "attention_mask": [], "labels": [], "domain": []}}
-# for split in ["train", "test"]: 
-#     for domain, text, label in zip(dataset[split]["domain"], dataset[split]["text"], dataset[split]["label"]):
-#         if text is None:
-#             pass
-#         else: 
-#             tokenized_input = tokenizer(text=text, max_length=256, truncation=True, padding=True)
-#             print(f"len(tokenized_input['input_ids']): {len(tokenized_input['input_ids'])}")
-#             tokenized_dataset[split]["input_ids"].append(tokenized_input["input_ids"])
-#             tokenized_dataset[split]["attention_mask"].append(tokenized_input["attention_mask"])
-#             tokenized_dataset[split]["labels"].append(label)
-#             tokenized_dataset[split]["domain"].append(domain)
-
-# # dataset = dataset.map(preprocess_function, batched=True)
-# # Create the dataset splits from the dictionary
-# train_dataset = Dataset.from_dict(tokenized_dataset["train"])
-# test_dataset = Dataset.from_dict(tokenized_dataset["test"])
-
-# # Combine into a DatasetDict
-# dataset = DatasetDict({
-#     "train": train_dataset,
-#     "test": test_dataset
-# })
-
-# print(f"dataset after processing: {dataset}")
-# dataset = tokenized_dataset
-# print(f"datasets after processing: {dataset}")
 
 # Incremental Domain Setup: Split dataset by domains
 domains = set(dataset["train"]["domain"])
@@ -300,18 +176,14 @@ for task_id, domain in enumerate(domains):
     domain_train = dataset.filter(lambda x: x["domain"] == domain)["train"]
     domain_test = dataset.filter(lambda x: x["domain"] == domain)["test"]
 
-    # # Split into train and validation sets
-    # domain_train, domain_val = train_test_split(domain_data.to_pandas(), test_size=0.2, stratify=domain_data["labels"], random_state=42)
-    # # Split the DataFrame into train and validation
-    # domain_train = domain_train[:train_size].reset_index(drop=True)  # Reset index to avoid adding `__index_level_0__`
-    # domain_val = domain_val[train_size:].reset_index(drop=True)    # Reset index
-
     print(f"domain: {domain}, domain_train: {domain_train}, domain_test: {domain_test}")
 
     columns_to_keep = ["input_ids", "attention_mask", "labels"]
     
     domain_train = domain_train.select_columns(columns_to_keep)
+    domain_train = domain_train.select(range(20))
     domain_test = domain_test.select_columns(columns_to_keep)
+    domain_test = domain_test.select(range(20))
 
     # Create training experience
     tl_train = DataAttribute(ConstantSequence(task_id, len(domain_train)), "targets_task_labels")
@@ -361,7 +233,7 @@ strategy = HGNaive(
     torch.nn.CrossEntropyLoss(),
     evaluator=eval_plugin,
     train_epochs=2,
-    train_mb_size=32,
+    train_mb_size=1,
     plugins=plugins,
 )
 
