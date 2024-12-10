@@ -12,6 +12,7 @@ from avalanche.benchmarks.utils import DataAttribute
 from sklearn.model_selection import train_test_split
 from datasets import Dataset
 from datasets import concatenate_datasets
+from datasets import load_dataset
 
 import avalanche
 import random
@@ -143,14 +144,14 @@ class HGNaive(avalanche.training.Naive):
         # Pad and stack along dimension 0 (batch dimension)
         # batched_input_ids = pad_sequence(self.mbatch["input_ids"], batch_first=True, padding_value=0).to(self.device)
         # batched_attention_mask = pad_sequence(self.mbatch["attention_mask"], batch_first=True, padding_value=0).to(self.device)
-        print(f"self.mbatch['input_ids']: {self.mbatch['input_ids']}")
+        # print(f"self.mbatch['input_ids']: {self.mbatch['input_ids']}")
 
         batched_input_ids = torch.stack(self.mbatch["input_ids"], dim=1) if not isinstance(self.mbatch["input_ids"], torch.Tensor) else self.mbatch["input_ids"]
         batched_attention_mask = torch.stack(self.mbatch["attention_mask"], dim=1) if not isinstance(self.mbatch['attention_mask'], torch.Tensor) else self.mbatch['attention_mask']
 
         self.mbatch["attention_mask"] = batched_attention_mask
         self.mbatch["input_ids"] = batched_input_ids
-        print(f"attention_mask.shape: {self.mbatch['attention_mask'].shape}\ninput_ids.shape: {self.mbatch['input_ids'].shape}")
+        # print(f"attention_mask.shape: {self.mbatch['attention_mask'].shape}\ninput_ids.shape: {self.mbatch['input_ids'].shape}")
         # print(f"self.mbatch: {self.mbatch}")
         # for k in self.mbatch.keys():
         #     for j in range(len(self.mbatch[k])):
@@ -169,53 +170,70 @@ class HGNaive(avalanche.training.Naive):
         ll = self._criterion(mb_output, self.mb_y.view(-1))
         return ll
 
+# # Parameters for synthetic data generation
+# NUM_DOMAINS = 3
+# SAMPLES_PER_DOMAIN = 320
+# MAX_SEQ_LENGTH = 20
+# LABELS = [0, 1]  # Binary classification (0 = negative, 1 = positive)
 
-# Parameters for synthetic data generation
-NUM_DOMAINS = 3
-SAMPLES_PER_DOMAIN = 320
-MAX_SEQ_LENGTH = 20
-LABELS = [0, 1]  # Binary classification (0 = negative, 1 = positive)
+# # Generate random text
+# def generate_random_text(max_length):
+#     words = ["good", "bad", "neutral", "happy", "sad", "amazing", "terrible", "excellent", "horrible"]
+#     length = random.randint(5, max_length)
+#     return " ".join(random.choices(words, k=length))
 
-# Generate random text
-def generate_random_text(max_length):
-    words = ["good", "bad", "neutral", "happy", "sad", "amazing", "terrible", "excellent", "horrible"]
-    length = random.randint(5, max_length)
-    return " ".join(random.choices(words, k=length))
+# # Generate synthetic dataset
+# synthetic_data = {"domain": [], "text": [], "label": []}
 
-# Generate synthetic dataset
-synthetic_data = {"domain": [], "text": [], "label": []}
+# for domain_id in range(NUM_DOMAINS):
+#     domain_name = f"domain_{domain_id}"
+#     for _ in range(SAMPLES_PER_DOMAIN):
+#         synthetic_data["domain"].append(domain_name)
+#         synthetic_data["text"].append(generate_random_text(MAX_SEQ_LENGTH))
+#         synthetic_data["label"].append(random.choice(LABELS))
 
-for domain_id in range(NUM_DOMAINS):
-    domain_name = f"domain_{domain_id}"
-    for _ in range(SAMPLES_PER_DOMAIN):
-        synthetic_data["domain"].append(domain_name)
-        synthetic_data["text"].append(generate_random_text(MAX_SEQ_LENGTH))
-        synthetic_data["label"].append(random.choice(LABELS))
+# # Convert to DataFrame
+# df = pd.DataFrame(synthetic_data)
 
-# Convert to DataFrame
-df = pd.DataFrame(synthetic_data)
+# # Split each domain into train and test
+# train_datasets = []
+# test_datasets = []
+# for domain_name in df["domain"].unique():
+#     domain_df = df[df["domain"] == domain_name]
+#     train_size = int(len(domain_df) * 0.8)
+#     train_df = domain_df[:train_size]
+#     test_df = domain_df[train_size:]
+#     train_datasets.append(Dataset.from_pandas(train_df))
+#     test_datasets.append(Dataset.from_pandas(test_df))
 
-# Split each domain into train and test
-train_datasets = []
-test_datasets = []
-for domain_name in df["domain"].unique():
-    domain_df = df[df["domain"] == domain_name]
-    train_size = int(len(domain_df) * 0.8)
-    train_df = domain_df[:train_size]
-    test_df = domain_df[train_size:]
-    train_datasets.append(Dataset.from_pandas(train_df))
-    test_datasets.append(Dataset.from_pandas(test_df))
+# # Combine train datasets for all domains
+# train_dataset = concatenate_datasets(train_datasets)
 
-# Combine train datasets for all domains
-train_dataset = concatenate_datasets(train_datasets)
-
-# Combine test datasets for all domains
-test_dataset = concatenate_datasets(test_datasets)
-dataset = DatasetDict({"train": train_dataset, "test": test_dataset})
+# # Combine test datasets for all domains
+# test_dataset = concatenate_datasets(test_datasets)
+# dataset = DatasetDict({"train": train_dataset, "test": test_dataset})
 
 # Check dataset structure
-print(dataset)
+# Load the dataset
+def filter_none_entries(dataset):
+    # Function to filter entries with `None` in "text"
+    filtered_dataset = {}
+    for split in dataset:  # Iterate through splits (e.g., "train", "test")
+        filtered_dataset[split] = {
+            "text": [],
+            "label": [],
+            "domain": []
+        }
+        for text, label, domain in zip(dataset[split]["text"], dataset[split]["label"], dataset[split]["domain"]):
+            if text is not None:  # Keep entries where `text` is not None
+                filtered_dataset[split]["text"].append(text)
+                filtered_dataset[split]["label"].append(label)
+                filtered_dataset[split]["domain"].append(domain)
 
+    return filtered_dataset
+
+dataset = load_dataset("json", data_files={"train": "data/sequence_classification_train.json", "test": "data/sequence_classification_test.json"})
+print(dataset)
 
 # Tokenizer and model for sequence classification
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
@@ -223,40 +241,77 @@ model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_l
 
 # Preprocessing function for sequence classification
 def preprocess_function(examples):
-    inputs = tokenizer(examples["text"], max_length=128, truncation=True, padding=True)
+    inputs = tokenizer(examples["text"], max_length=256, truncation=True, padding=True)
     inputs["labels"] = examples["label"]
+    inputs["domain"] = examples["domain"]
     return inputs
 
 print(f"datasets before processing: {dataset}")
-# Apply preprocessing
+
+dataset = filter_none_entries(dataset)
+train_dataset = Dataset.from_dict(dataset["train"])
+test_dataset = Dataset.from_dict(dataset["test"])
+
+# Combine into a DatasetDict
+dataset = DatasetDict({
+    "train": train_dataset,
+    "test": test_dataset
+})
+
 dataset = dataset.map(preprocess_function, batched=True)
-print(f"datasets after processing: {dataset}")
+
+# Apply preprocessing
+# tokenized_dataset = {"train": {"input_ids": [], "attention_mask": [], "labels": [], "domain": []}, "test": {"input_ids": [], "attention_mask": [], "labels": [], "domain": []}}
+# for split in ["train", "test"]: 
+#     for domain, text, label in zip(dataset[split]["domain"], dataset[split]["text"], dataset[split]["label"]):
+#         if text is None:
+#             pass
+#         else: 
+#             tokenized_input = tokenizer(text=text, max_length=256, truncation=True, padding=True)
+#             print(f"len(tokenized_input['input_ids']): {len(tokenized_input['input_ids'])}")
+#             tokenized_dataset[split]["input_ids"].append(tokenized_input["input_ids"])
+#             tokenized_dataset[split]["attention_mask"].append(tokenized_input["attention_mask"])
+#             tokenized_dataset[split]["labels"].append(label)
+#             tokenized_dataset[split]["domain"].append(domain)
+
+# # dataset = dataset.map(preprocess_function, batched=True)
+# # Create the dataset splits from the dictionary
+# train_dataset = Dataset.from_dict(tokenized_dataset["train"])
+# test_dataset = Dataset.from_dict(tokenized_dataset["test"])
+
+# # Combine into a DatasetDict
+# dataset = DatasetDict({
+#     "train": train_dataset,
+#     "test": test_dataset
+# })
+
+# print(f"dataset after processing: {dataset}")
+# dataset = tokenized_dataset
+# print(f"datasets after processing: {dataset}")
 
 # Incremental Domain Setup: Split dataset by domains
 domains = set(dataset["train"]["domain"])
 train_exps = []
-val_exps = []
+test_exps = []
 data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=tokenizer, model=model)
-
 
 for task_id, domain in enumerate(domains):
     # Use the dataset for this domain as an experience
-    domain_data = dataset.filter(lambda x: x["domain"] == domain)["train"]
-    
-    # Split into train and validation sets
-    domain_train, domain_val = train_test_split(domain_data.to_pandas(), test_size=0.2, stratify=domain_data["labels"], random_state=42)
-    # Split the DataFrame into train and validation
-    domain_train = domain_train[:train_size].reset_index(drop=True)  # Reset index to avoid adding `__index_level_0__`
-    domain_val = domain_val[train_size:].reset_index(drop=True)    # Reset index
+    domain_train = dataset.filter(lambda x: x["domain"] == domain)["train"]
+    domain_test = dataset.filter(lambda x: x["domain"] == domain)["test"]
 
-    # Select the columns to keep
+    # # Split into train and validation sets
+    # domain_train, domain_val = train_test_split(domain_data.to_pandas(), test_size=0.2, stratify=domain_data["labels"], random_state=42)
+    # # Split the DataFrame into train and validation
+    # domain_train = domain_train[:train_size].reset_index(drop=True)  # Reset index to avoid adding `__index_level_0__`
+    # domain_val = domain_val[train_size:].reset_index(drop=True)    # Reset index
+
+    print(f"domain: {domain}, domain_train: {domain_train}, domain_test: {domain_test}")
+
     columns_to_keep = ["input_ids", "attention_mask", "labels"]
-
-    domain_train = Dataset.from_pandas(domain_train)
+    
     domain_train = domain_train.select_columns(columns_to_keep)
-
-    domain_val = Dataset.from_pandas(domain_val)
-    domain_val = domain_val.select_columns(columns_to_keep)
+    domain_test = domain_test.select_columns(columns_to_keep)
 
     # Create training experience
     tl_train = DataAttribute(ConstantSequence(task_id, len(domain_train)), "targets_task_labels")
@@ -268,20 +323,21 @@ for task_id, domain in enumerate(domains):
     )
     train_exps.append(exp_train)
 
-    # # Create validation experience
-    # tl_val = DataAttribute(ConstantSequence(task_id, len(domain_val)), "targets_task_labels")
-    # val_exp = AvalancheDataset(
-    #     [domain_val],
-    #     data_attributes=[tl_val],
-    #     collate_fn=data_collator
-    # )
-    # val_exps.append(val_exp)
+    tl_test = DataAttribute(ConstantSequence(task_id, len(domain_test)), "targets_task_labels")
+    exp_test = CLExperience(task_id, None)
+    exp_test.dataset = AvalancheDataset(
+        [domain_test],
+        data_attributes=[tl_test],
+        collate_fn=data_collator
+    )
+
+    test_exps.append(exp_test)
 
 # Create incremental benchmark scenario
 benchmark = CLScenario(
     [
         CLStream("train", train_exps),  # Training stream
-        # CLStream("val", val_exps),     # Validation stream
+        CLStream("test", test_exps),     # Validation stream
     ]
 )
 
@@ -304,7 +360,7 @@ strategy = HGNaive(
     optimizer,
     torch.nn.CrossEntropyLoss(),
     evaluator=eval_plugin,
-    train_epochs=3,
+    train_epochs=2,
     train_mb_size=32,
     plugins=plugins,
 )
@@ -314,5 +370,5 @@ for experience in benchmark.train_stream:
     print(f"Training on experience: {experience.current_experience}")
     strategy.train(experience, collate_fn=data_collator)
     
-    # print("Validating...")
-    # strategy.eval(benchmark.val_stream)  # Validation after each training experience
+    print("Testing...")
+    strategy.eval(benchmark.test_stream)  # Validation after each training experience
