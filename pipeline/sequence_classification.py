@@ -115,6 +115,12 @@ class HGNaive(avalanche.training.Naive):
         ll = self._criterion(mb_output, self.mb_y.view(-1))
         return ll
 
+<<<<<<< Updated upstream
+=======
+device = torch.device(
+    f"cuda" if torch.cuda.is_available() else "cpu"
+)
+>>>>>>> Stashed changes
 # Check dataset structure
 # Load the dataset
 def filter_none_entries(dataset):
@@ -151,8 +157,12 @@ def preprocess_function(examples):
 print(f"datasets before processing: {dataset}")
 
 dataset = filter_none_entries(dataset)
+<<<<<<< Updated upstream
 # Slice to include only the first 20 entries
 
+=======
+dataset["train"] = 
+>>>>>>> Stashed changes
 train_dataset = Dataset.from_dict(dataset["train"])
 test_dataset = Dataset.from_dict(dataset["test"])
 
@@ -175,8 +185,6 @@ for task_id, domain in enumerate(domains):
     # Use the dataset for this domain as an experience
     domain_train = dataset.filter(lambda x: x["domain"] == domain)["train"]
     domain_test = dataset.filter(lambda x: x["domain"] == domain)["test"]
-
-    print(f"domain: {domain}, domain_train: {domain_train}, domain_test: {domain_test}")
 
     columns_to_keep = ["input_ids", "attention_mask", "labels"]
     
@@ -221,7 +229,7 @@ eval_plugin = EvaluationPlugin(
 )
 
 # Replay plugin
-plugins = [ReplayPlugin(mem_size=200)]
+plugins = [ReplayPlugin(mem_size=200), eval_plugin]
 
 # Optimizer
 optimizer = torch.optim.Adam(model.parameters(), lr=2e-5)
@@ -231,10 +239,12 @@ strategy = HGNaive(
     model,
     optimizer,
     torch.nn.CrossEntropyLoss(),
-    evaluator=eval_plugin,
+    # evaluator=eval_plugin,
     train_epochs=2,
     train_mb_size=1,
+    eval_mb_size=1,
     plugins=plugins,
+    device=device
 )
 
 # Training and validation
