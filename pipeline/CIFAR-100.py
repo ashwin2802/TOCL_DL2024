@@ -1,20 +1,8 @@
-################################################################################
-# Copyright (c) 2021 ContinualAI.                                              #
-# Copyrights licensed under the MIT License.                                   #
-# See the accompanying LICENSE file for terms.                                 #
-#                                                                              #
-# Date: 12-10-2020                                                             #
-# Author(s): Eli Verwimp                                                       #
-# E-mail: contact@continualai.org                                              #
-# Website: avalanche.continualai.org                                           #
-################################################################################
+import sys
+import os
+# Add project_root to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-"""
-This example shows how to train models provided by pytorchcv with the rehearsal
-strategy.
-"""
-
-from os.path import expanduser
 
 import argparse
 import torch
@@ -35,7 +23,7 @@ from avalanche.evaluation.metrics import (
 from avalanche.logging import InteractiveLogger, TextLogger
 from avalanche.training.plugins import EvaluationPlugin
 
-from compute_metrics import *
+from utils.compute_metrics import *
 
 
 def main(args):
