@@ -20,3 +20,7 @@ Repeat experiments from the Cambridge Paper:
     again, plot the metrics for visualizing what is going on
 - implement ResNet-18 from the module loader and train on a fixed number of epochs for MNIST and CIFAR-100
 
+
+# Run ablation
+For CIFAR-100, we want to first increase the epochs until we get decent performance on the current task being used.
+

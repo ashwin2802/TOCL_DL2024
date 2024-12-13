@@ -1,6 +1,7 @@
 {
     "model_name": "bert-base-uncased", 
     
+    "cache_dir": "/cluster/scratch/rrigoni/.cache/huggingface",
     "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/Amazon_Review_{}_tasks_{}_strategy_{}.json",
 
     "strategy": "naive",

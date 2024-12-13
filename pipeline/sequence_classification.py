@@ -8,7 +8,7 @@ import torch
 import argparse
 import json
 
-from transformers import AutoTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, BertForSequenceClassification, BertConfig
 from avalanche.training.plugins import ReplayPlugin
 from avalanche.training.plugins.evaluation import EvaluationPlugin
 from avalanche.logging import InteractiveLogger
@@ -27,11 +27,15 @@ def main(args):
     )
 
     tokenizer = AutoTokenizer.from_pretrained(args['model_name'])
-    model = BertForSequenceClassification.from_pretrained(args['model_name'], num_labels=2).to(device)
+    
+    config = BertConfig.from_pretrained(args['model_name'], num_labels=2)
+    model = BertForSequenceClassification(config).to(device)
+    
+    # model = BertForSequenceClassification.from_pretrained(args['model_name'], num_labels=2).to(device)
 
     data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=tokenizer, model=model)
 
-    amazon_reviews = AmazonReviewDataset(num_samples_per_domain=args['num_samples_per_domain'], domain_groups=args['domain_groups'], tokenizer=tokenizer, model=model)
+    amazon_reviews = AmazonReviewDataset(num_samples_per_domain=args['num_samples_per_domain'], domain_groups=args['domain_groups'], tokenizer=tokenizer, model=model, cache_dir=args['cache_dir'])
     benchmark, num_tasks = amazon_reviews.create_benchmark()
 
     # Evaluation plugin

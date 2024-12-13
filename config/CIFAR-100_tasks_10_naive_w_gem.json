@@ -4,7 +4,7 @@
     
     "train_mb_size": 100, 
     "test_mb_size": 100, 
-    "train_epochs": 20,
+    "train_epochs": 50,
 
     "strategy" : "naive-w-gem",
 

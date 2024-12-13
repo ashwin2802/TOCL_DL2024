@@ -15,11 +15,12 @@ class AmazonReviewDataset:
     """
     A class to manage the download and processing of Amazon Review datasets for various categories.
     """
-    def __init__(self, num_samples_per_domain, domain_groups, tokenizer, model):
+    def __init__(self, num_samples_per_domain, domain_groups, tokenizer, model, cache_dir=None):
         self.domain_groups = domain_groups
         self.tokenizer = tokenizer
         self.model = model
         self.num_samples_per_domain = num_samples_per_domain
+        self.cache_dir = cache_dir
 
         # Initialize the list of categories
         self.categories = [
@@ -50,49 +51,56 @@ class AmazonReviewDataset:
         """
         Filters and transforms the dataset to:
         - Include only entries where "rating" is a number and "text" is a non-empty string.
-        - Keep only the "text" and "rating" fields.
-        - Replace "rating" with "label", where "label" is 0 if rating <= 2.5, and 1 otherwise.
-        - Balance the dataset between positive and negative samples.
+        - Shuffle the dataset after filtering.
+        - Take a balanced number of positive and negative entries based on the threshold (rating <= 2.5).
+        - Apply the transformation only to the selected subset.
 
         Parameters:
-        dataset (Dataset): The dataset to filter and transform. Entries of the dataset are of the form
-            {"text": ..., "label": ...}.
+        dataset (Dataset): The dataset to filter and transform.
         num_samples (int): The total number of samples to keep (half positive, half negative).
 
         Returns:
-        Dataset: The filtered and transformed dataset.
+        Dataset: The filtered, balanced, and transformed dataset.
         """
 
         def is_valid(entry):
             # Check if rating is a number and text is a non-empty string
             return isinstance(entry.get("rating"), (int, float)) and isinstance(entry.get("text"), str) and len(entry["text"].strip()) > 0
 
+        
+
+        # Shuffle the filtered dataset
+        shuffled_dataset = filtered_dataset.shuffle()
+
+        # Split into positive and negative entries based on the threshold (rating <= 2.5)
+        positive_samples = []
+        negative_samples = []
+        for entry in shuffled_dataset:
+            if entry["rating"] > 2.5 and len(positive_samples) < self.num_samples_per_domain // 2:
+                positive_samples.append(entry)
+            elif entry["rating"] <= 2.5 and len(negative_samples) < self.num_samples_per_domain // 2:
+                negative_samples.append(entry)
+            if len(positive_samples) == self.num_samples_per_domain // 2 and len(negative_samples) == self.num_samples_per_domain // 2:
+                break
+
+        # Combine positive and negative samples into a single dataset
+        balanced_samples = positive_samples + negative_samples
+         # Convert the list of samples into a dictionary of lists
+        balanced_dict = {key: [entry[key] for entry in balanced_samples] for key in balanced_samples[0].keys()}
+
+        # Transform the balanced samples
         def transform(entry):
-            # Keep only "text" and "rating", rename "rating" to "label"
             return {
                 "text": entry["text"],
                 "label": 0 if entry["rating"] <= 2.5 else 1,
-                # "domain": domain
             }
 
-        # Filter dataset
-        filtered_dataset = dataset.filter(is_valid)
-        transformed_dataset = filtered_dataset.map(transform)
+        # Apply transformation to the balanced dataset
+        transformed_dataset = Dataset.from_dict(balanced_dict).filter(is_valid).map(transform)
         transformed_dataset = transformed_dataset.select_columns(["text", "label"])
 
-        # Balance the dataset
-        positive_samples = transformed_dataset.filter(lambda x: x["label"] == 1)
-        negative_samples = transformed_dataset.filter(lambda x: x["label"] == 0)
+        return transformed_dataset
 
-        # Determine number of samples per class
-        if self.num_samples_per_domain:
-            num_samples_per_class = self.num_samples_per_domain // 2
-            positive_samples = positive_samples.select(range(min(len(positive_samples), num_samples_per_class)))
-            negative_samples = negative_samples.select(range(min(len(negative_samples), num_samples_per_class)))
-
-       # Concatenate and shuffle
-        balanced_dataset = concatenate_datasets([positive_samples, negative_samples]).shuffle()
-        return balanced_dataset
 
     def download(self, category):
         """
@@ -106,27 +114,32 @@ class AmazonReviewDataset:
         Returns:
         Dataset: The filtered and balanced "full" split of the dataset, or None if an error occurs.
         """
-        try:
+        if self.cache_dir: 
+            # Load the dataset
+            dataset = load_dataset(
+                "McAuley-Lab/Amazon-Reviews-2023",
+                f"raw_review_{category}",
+                cache_dir=self.cache_dir,
+                trust_remote_code=True
+            )
+        else: 
             # Load the dataset
             dataset = load_dataset(
                 "McAuley-Lab/Amazon-Reviews-2023",
                 f"raw_review_{category}",
                 trust_remote_code=True
             )
-            print(f"Successfully downloaded dataset for category: {category}")
-            
-            # Get the "full" split
-            full_split = dataset["full"]
-            
-            # Filter, transform, and balance the dataset
-            processed_split = self.filter_and_transform_dataset(full_split)
-            
-            print(f"Processed and balanced dataset size for {category}: {len(processed_split)}")
-            # print(f"processed_split: {processed_split}")
-            return processed_split
-        except Exception as e:
-            print(f"An error occurred while downloading or processing the dataset for category '{category}': {e}")
-            return None
+        print(f"Successfully downloaded dataset for category: {category}")
+        
+        # Get the "full" split
+        full_split = dataset["full"]
+        
+        # Filter, transform, and balance the dataset
+        processed_split = self.filter_and_transform_dataset(full_split)
+        
+        print(f"Processed and balanced dataset size for {category}: {len(processed_split)}")
+        # print(f"processed_split: {processed_split}")
+        return processed_split
 
     def download_all(self):
         """
@@ -254,7 +267,12 @@ if __name__ == "__main__":
     amazon_reviews = AmazonReviewDataset()
     # Tokenizer and model for sequence classification
     tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-    model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+    # model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+    # Create a new configuration for the model
+    config = BertConfig.from_pretrained("bert-base-uncased", num_labels=2)
+
+    # Instantiate a model with random weights
+    model = BertForSequenceClassification(config)
 
     # Download and process datasets for all categories with 1000 samples each
     all_datasets = amazon_reviews.create_benchmark(num_samples_per_category=1000, domain_groups=None, tokenizer=tokenizer, model=model)
