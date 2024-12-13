@@ -176,7 +176,7 @@ class AmazonReviewDataset:
         # Convert Dataset to pandas DataFrame for stratified splitting
         df = dataset.to_pandas()
         train_df, test_df = train_test_split(
-            df, test_size=test_size, stratify=df["label"], random_state=42
+            df, test_size=test_size, stratify=df["labels"], random_state=42
         )
         return DatasetDict({
             "train": Dataset.from_pandas(train_df),

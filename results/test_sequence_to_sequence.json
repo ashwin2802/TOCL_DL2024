@@ -1,7 +1,28 @@
 {
-    "accuracy_matrix": [],
-    "average_accuracy": [],
-    "average_incremental_accuracy": [],
-    "forgetting_measure": [],
-    "backward_transfer": []
+    "accuracy_matrix": [
+        [
+            0.8333333134651184,
+            0.8199999928474426
+        ],
+        [
+            0.8580645322799683,
+            0.8322580456733704
+        ]
+    ],
+    "average_accuracy": [
+        0.8333333134651184,
+        0.8261290192604065
+    ],
+    "average_incremental_accuracy": [
+        0.8333333134651184,
+        0.8297311663627625
+    ],
+    "forgetting_measure": [
+        0.0,
+        0.013333320617675781
+    ],
+    "backward_transfer": [
+        0.0,
+        -0.013333320617675781
+    ]
 }
