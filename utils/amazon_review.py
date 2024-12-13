@@ -91,8 +91,8 @@ class AmazonReviewDataset:
 
         # Filter dataset
         filtered_dataset = dataset.filter(is_valid)
-        # Transform dataset
         transformed_dataset = filtered_dataset.map(transform)
+        transformed_dataset = transformed_dataset.select_columns(["text", "label"])
 
         # Balance the dataset
         positive_samples = transformed_dataset.filter(lambda x: x["label"] == 1)
@@ -136,6 +136,7 @@ class AmazonReviewDataset:
             processed_split = self.filter_and_transform_dataset(full_split)
             
             print(f"Processed and balanced dataset size for {category}: {len(processed_split)}")
+            # print(f"processed_split: {processed_split}")
             return processed_split
         except Exception as e:
             print(f"An error occurred while downloading or processing the dataset for category '{category}': {e}")
@@ -205,10 +206,11 @@ class AmazonReviewDataset:
             # inputs["domain"] = examples["domain"]
             return inputs
 
+        # Apply preprocessing and keep only specified columns
         dataset_dict = {
-            key: value.map(preprocess_function, batched=True) for key, value in dataset_dict.items()
+            key: value.map(preprocess_function, batched=True).select_columns(["input_ids", "attention_mask", "labels"])
+            for key, value in dataset_dict.items()
         }
-
         if self.domain_groups is None:
             domain_groups = [{domain} for domain in dataset_dict.keys()]
 
