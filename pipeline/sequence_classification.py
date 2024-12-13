@@ -36,6 +36,8 @@ from transformers import PreTrainedTokenizerBase
 device = torch.device(
     f"cuda" if torch.cuda.is_available() else "cpu"
 )
+print(f"device: {device}")
+
 # Check dataset structure
 # Load the dataset
 # def filter_none_entries(dataset):
@@ -135,7 +137,9 @@ from utils.amazon_review import AmazonReviewDataset
 
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
 model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+
 data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=tokenizer, model=model)
+
 amazon_reviews = AmazonReviewDataset(num_samples_per_domain=1000, domain_groups=None, tokenizer=tokenizer, model=model)
 benchmark, num_tasks = amazon_reviews.create_benchmark()
 
