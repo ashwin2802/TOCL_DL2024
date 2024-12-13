@@ -25,38 +25,26 @@ class AmazonReviewDataset:
         self.categories = [
             "All_Beauty",
             "Amazon_Fashion",
-            # "Appliances",
-            # "Arts_Crafts_and_Sewing",
-            # "Automotive",
-            # "Baby_Products",
-            # "Beauty_and_Personal_Care",
-            # "Books",
-            # "CDs_and_Vinyl",
-            # "Cell_Phones_and_Accessories",
-            # "Clothing_Shoes_and_Jewelry",
-            # "Digital_Music",
-            # "Electronics",
-            # "Gift_Cards",
-            # "Grocery_and_Gourmet_Food",
-            # "Handmade_Products",
-            # "Health_and_Household",
-            # "Health_and_Personal_Care",
-            # "Home_and_Kitchen",
-            # "Industrial_and_Scientific",
-            # "Kindle_Store",
-            # "Magazine_Subscriptions",
-            # "Movies_and_TV",
-            # "Musical_Instruments",
-            # "Office_Products",
-            # "Patio_Lawn_and_Garden",
-            # "Pet_Supplies",
-            # "Software",
-            # "Sports_and_Outdoors",
-            # "Subscription_Boxes",
-            # "Tools_and_Home_Improvement",
-            # "Toys_and_Games",
-            # "Video_Games"
+            "Appliances",
+            "Arts_Crafts_and_Sewing",
+            "Automotive",
+            "Baby_Products",
+            "Books",
+            "CDs_and_Vinyl",
+            "Cell_Phones_and_Accessories",
+            "Clothing_Shoes_and_Jewelry",
+            "Electronics",
+            "Grocery_and_Gourmet_Food",
+            "Health_and_Household",
+            "Home_and_Kitchen",
+            "Kindle_Store",
+            "Movies_and_TV",
+            "Musical_Instruments",
+            "Pet_Supplies",
+            "Sports_and_Outdoors",
+            "Toys_and_Games"
         ]
+
 
     def filter_and_transform_dataset(self, dataset):
         """
@@ -74,8 +62,6 @@ class AmazonReviewDataset:
         Returns:
         Dataset: The filtered and transformed dataset.
         """
-        # TODO: remove this!
-        dataset = dataset.select(range(2000))
 
         def is_valid(entry):
             # Check if rating is a number and text is a non-empty string
