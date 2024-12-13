@@ -80,6 +80,11 @@ class HGNaive(avalanche.training.Naive):
         batched_input_ids = torch.stack(self.mbatch["input_ids"], dim=1) if not isinstance(self.mbatch["input_ids"], torch.Tensor) else self.mbatch["input_ids"]
         batched_attention_mask = torch.stack(self.mbatch["attention_mask"], dim=1) if not isinstance(self.mbatch['attention_mask'], torch.Tensor) else self.mbatch['attention_mask']
 
+        batched_input_ids = batched_input_ids.to(self.model.device)
+        batched_attention_mask = batched_attention_mask.to(self.model.device)
+        self.mbatch["labels"] = self.mbatch["labels"].to(self.model.device)
+
+        # print(f"self.mbatch.keys(): {self.mbatch.keys()}")
         self.mbatch["attention_mask"] = batched_attention_mask
         self.mbatch["input_ids"] = batched_input_ids
 

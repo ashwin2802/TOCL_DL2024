@@ -136,7 +136,8 @@ print(f"device: {device}")
 from utils.amazon_review import AmazonReviewDataset
 
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
-model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
+model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2).to(device)
+
 
 data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=tokenizer, model=model)
 
