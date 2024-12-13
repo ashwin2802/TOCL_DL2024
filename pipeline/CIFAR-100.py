@@ -238,20 +238,6 @@ if __name__ == "__main__":
         type=str,
         help=""
     )
-    
-    # parser.add_argument(
-    #     "--data_dir", 
-    #     type=str,
-    #     default="/cluster/scratch/rrigoni/dl_project/CIFAR-100", 
-    #     help=""
-    # )
-    # parser.add_argument(
-    #     "--res_file_template", 
-    #     type=str,
-    #     default="/home/rrigoni/TOCL_DL2024/results/CIFAR-100_{}_{}_tasks_{}.json", 
-    #     help=""
-    # )
-    # parser.add_arguemnt
 
     args = parser.parse_args()
 

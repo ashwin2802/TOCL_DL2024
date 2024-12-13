@@ -7,10 +7,16 @@ def compute_accuracy_matrix(results: dict, num_tasks: int):
     # Step 2: Process results and fill the matrix
     for i in range(num_tasks):
         task_results = results[i]  # Access results for task `i`
-        task_keys = sorted(task_results.keys(), key=lambda k: int(k.split("/")[-1][-3:]))  # Sort keys by task index
+        task_results_polished = {}
+        for key, value in task_results.items():
+            if key.startswith('Top1_Acc_Exp'): 
+                task_results_polished[key] = value
+
+        print(f"task_results_polished: {task_results_polished}")
+        task_keys_polished = sorted(task_results_polished.keys(), key=lambda k: int(k.split("/")[-1][-3:]))  # Sort keys by task index
         
-        for j, key in enumerate(task_keys):
-            accuracy_matrix[j, i] = task_results[key]  # Fill values in column `i`
+        for j, key in enumerate(task_keys_polished):
+            accuracy_matrix[j, i] = task_results_polished[key]  # Fill values in column `i`
 
     return accuracy_matrix
 
@@ -43,7 +49,7 @@ def compute_forgetting_matrix(accuracy_matrix: torch.Tensor):
         for j in range(k): 
             max_diff = 0.0
             for i in range(k): 
-                max_diff = max(max_diff, accuracy_matrix[j, i].item())
+                max_diff = max(max_diff, accuracy_matrix[j, i].item() - accuracy_matrix[j, k].item())
 
             cum_max_diff += max_diff
         

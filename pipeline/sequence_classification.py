@@ -6,13 +6,18 @@ from avalanche.benchmarks.utils import AvalancheDataset, ConstantSequence
 from avalanche.training.plugins import ReplayPlugin
 from avalanche.training.plugins.evaluation import EvaluationPlugin
 from avalanche.logging import InteractiveLogger
-from avalanche.evaluation.metrics import loss_metrics
+from avalanche.evaluation.metrics import (
+    loss_metrics, 
+    accuracy_metrics
+)
 from avalanche.training.supervised import Naive
 from avalanche.benchmarks.utils import DataAttribute
 from sklearn.model_selection import train_test_split
 from datasets import Dataset
 from datasets import concatenate_datasets
 from datasets import load_dataset
+
+from compute_metrics import *
 
 import avalanche
 import random
@@ -115,12 +120,9 @@ class HGNaive(avalanche.training.Naive):
         ll = self._criterion(mb_output, self.mb_y.view(-1))
         return ll
 
-<<<<<<< Updated upstream
-=======
 device = torch.device(
     f"cuda" if torch.cuda.is_available() else "cpu"
 )
->>>>>>> Stashed changes
 # Check dataset structure
 # Load the dataset
 def filter_none_entries(dataset):
@@ -141,7 +143,6 @@ def filter_none_entries(dataset):
     return filtered_dataset
 
 dataset = load_dataset("json", data_files={"train": "data/sequence_classification_train.json", "test": "data/sequence_classification_test.json"})
-print(dataset)
 
 # Tokenizer and model for sequence classification
 tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
@@ -154,15 +155,10 @@ def preprocess_function(examples):
     inputs["domain"] = examples["domain"]
     return inputs
 
-print(f"datasets before processing: {dataset}")
+# print(f"datasets before processing: {dataset}")
 
 dataset = filter_none_entries(dataset)
-<<<<<<< Updated upstream
-# Slice to include only the first 20 entries
 
-=======
-dataset["train"] = 
->>>>>>> Stashed changes
 train_dataset = Dataset.from_dict(dataset["train"])
 test_dataset = Dataset.from_dict(dataset["test"])
 
@@ -177,6 +173,7 @@ dataset = dataset.map(preprocess_function, batched=True)
 
 # Incremental Domain Setup: Split dataset by domains
 domains = set(dataset["train"]["domain"])
+num_tasks = len(domains)
 train_exps = []
 test_exps = []
 data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=tokenizer, model=model)
@@ -189,9 +186,9 @@ for task_id, domain in enumerate(domains):
     columns_to_keep = ["input_ids", "attention_mask", "labels"]
     
     domain_train = domain_train.select_columns(columns_to_keep)
-    domain_train = domain_train.select(range(20))
+    domain_train = domain_train.select(range(1))
     domain_test = domain_test.select_columns(columns_to_keep)
-    domain_test = domain_test.select(range(20))
+    domain_test = domain_test.select(range(1))
 
     # Create training experience
     tl_train = DataAttribute(ConstantSequence(task_id, len(domain_train)), "targets_task_labels")
@@ -223,9 +220,9 @@ benchmark = CLScenario(
 
 # Evaluation plugin
 eval_plugin = EvaluationPlugin(
-    loss_metrics(epoch=True, experience=True, stream=True),
+    # loss_metrics(epoch=True, experience=True, stream=True),
+    accuracy_metrics(minibatch=False, epoch=False, experience=True, stream=False),
     loggers=[InteractiveLogger()],
-    strict_checks=False,
 )
 
 # Replay plugin
@@ -240,7 +237,7 @@ strategy = HGNaive(
     optimizer,
     torch.nn.CrossEntropyLoss(),
     # evaluator=eval_plugin,
-    train_epochs=2,
+    train_epochs=1,
     train_mb_size=1,
     eval_mb_size=1,
     plugins=plugins,
@@ -248,9 +245,22 @@ strategy = HGNaive(
 )
 
 # Training and validation
+results = []
 for experience in benchmark.train_stream:
     print(f"Training on experience: {experience.current_experience}")
     strategy.train(experience, collate_fn=data_collator)
     
     print("Testing...")
-    strategy.eval(benchmark.test_stream)  # Validation after each training experience
+    results.append(strategy.eval(benchmark.test_stream))  # Validation after each training experience
+
+accuracy_matrix = compute_accuracy_matrix(results, num_tasks)
+
+average_accuracy = compute_average_accuracy_matrix(accuracy_matrix)
+average_incremental_accuracy = compute_average_incremental_accuracy_matrix(average_accuracy)
+
+forgetting_measure = compute_forgetting_matrix(accuracy_matrix)
+backward_transfer = compute_backward_transfer_matrix(accuracy_matrix)
+
+file_path = 'results/test_sequence_to_sequence.json'
+save_results_to_file(file_path, accuracy_matrix, average_accuracy, average_incremental_accuracy, forgetting_measure, backward_transfer)
+    
