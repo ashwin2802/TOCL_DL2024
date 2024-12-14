@@ -32,25 +32,25 @@ class AmazonReviewDataset:
         # Initialize the list of categories
         self.categories = [
             "Toys_and_Games",
-            "All_Beauty",
-            "Amazon_Fashion",
-            "Appliances",
-            "Arts_Crafts_and_Sewing",
-            "Automotive",
-            "Baby_Products",
-            "Books",
-            "CDs_and_Vinyl",
-            "Cell_Phones_and_Accessories",
-            "Clothing_Shoes_and_Jewelry",
-            "Electronics",
-            "Grocery_and_Gourmet_Food",
-            "Health_and_Household",
-            "Home_and_Kitchen",
-            "Kindle_Store",
-            "Movies_and_TV",
-            "Musical_Instruments",
-            "Pet_Supplies",
-            "Sports_and_Outdoors",
+            # "All_Beauty",
+            # "Amazon_Fashion",
+            # "Appliances",
+            # "Arts_Crafts_and_Sewing",
+            # "Automotive",
+            # "Baby_Products",
+            # "Books",
+            # "CDs_and_Vinyl",
+            # "Cell_Phones_and_Accessories",
+            # "Clothing_Shoes_and_Jewelry",
+            # "Electronics",
+            # "Grocery_and_Gourmet_Food",
+            # "Health_and_Household",
+            # "Home_and_Kitchen",
+            # "Kindle_Store",
+            # "Movies_and_TV",
+            # "Musical_Instruments",
+            # "Pet_Supplies",
+            # "Sports_and_Outdoors",
         ]
 
 
@@ -75,10 +75,7 @@ class AmazonReviewDataset:
             return isinstance(entry.get("rating"), (int, float)) and isinstance(entry.get("text"), str) and len(entry["text"].strip()) > 0
 
         # Shuffle the filtered dataset
-        print(f"before shuffling the dataset")
         shuffled_dataset = dataset.shuffle()
-        print(f"after shuffling the dataset")   
-
         # Split into positive and negative entries based on the threshold (rating <= 2.5)
         positive_samples = []
         negative_samples = []
@@ -142,7 +139,7 @@ class AmazonReviewDataset:
         
         # # Get the "full" split
         # full_split = dataset["full"]
-        full_split = dataset
+        full_split = dataset["full"]
         
         # Filter, transform, and balance the dataset
         processed_split = self.filter_and_transform_dataset(full_split)
@@ -205,8 +202,14 @@ class AmazonReviewDataset:
         Returns:
         CLScenario: Incremental learning benchmark scenario.
         """
+        from datasets.config import HF_DATASETS_CACHE
+        import os
 
-        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset")
+        # Use default cache directory for Hugging Face datasets
+        processed_dataset_path = os.path.join(HF_DATASETS_CACHE, "amazon_review_dataset")
+
+        # Print the resolved path
+        print(f"Processed dataset will be saved in: {processed_dataset_path}")
 
         # Check if the preprocessed dataset already exists in the cache
         if os.path.exists(processed_dataset_path):
@@ -216,11 +219,13 @@ class AmazonReviewDataset:
             # Download and preprocess the dataset
             dataset_dict = self.download_all()
             # Save the preprocessed dataset to the cache directory
-            os.makedirs(self.cache_dir, exist_ok=True)
+            # os.makedirs(, exist_ok=True)
             DatasetDict(dataset_dict).save_to_disk(processed_dataset_path)
+            print(f"Dataset saved at path: {processed_dataset_path}")
 
         # Preprocess dataset for sequence classification
         def preprocess_function(examples):
+            # print(f"examples: {examples}")
             inputs = self.tokenizer(examples["text"], max_length=256, truncation=True, padding=True)
             inputs["labels"] = examples["label"]
             # inputs["domain"] = examples["domain"]
@@ -231,6 +236,7 @@ class AmazonReviewDataset:
             key: value.map(preprocess_function, batched=True).select_columns(["input_ids", "attention_mask", "labels"])
             for key, value in dataset_dict.items()
         }
+
         if self.domain_groups is None:
             domain_groups = [{domain} for domain in dataset_dict.keys()]
 

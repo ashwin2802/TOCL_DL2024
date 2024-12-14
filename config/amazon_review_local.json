@@ -5,7 +5,7 @@
     "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/Amazon_Review_{}_tasks_{}_strategy_{}.json",
 
     "strategy": "naive",
-    "num_samples_per_domain": 50000,
+    "num_samples_per_domain": 2000,
     "domain_groups": null, 
     
     "train_mb_size": 100, 
