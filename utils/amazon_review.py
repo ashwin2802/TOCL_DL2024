@@ -11,6 +11,9 @@ from avalanche.benchmarks.utils import DataAttribute
 from avalanche.benchmarks.utils.data_attribute import ConstantSequence
 from utils.sequence_classification import CustomDataCollatorSeq2SeqBeta
 
+from tqdm import tqdm
+import os
+
 class AmazonReviewDataset:
     """
     A class to manage the download and processing of Amazon Review datasets for various categories.
@@ -22,8 +25,13 @@ class AmazonReviewDataset:
         self.num_samples_per_domain = num_samples_per_domain
         self.cache_dir = cache_dir
 
+        # Set the desired cache directory
+        if self.cache_dir: 
+            os.environ["HF_DATASETS_CACHE"] = self.cache_dir
+
         # Initialize the list of categories
         self.categories = [
+            "Toys_and_Games",
             "All_Beauty",
             "Amazon_Fashion",
             "Appliances",
@@ -43,7 +51,6 @@ class AmazonReviewDataset:
             "Musical_Instruments",
             "Pet_Supplies",
             "Sports_and_Outdoors",
-            "Toys_and_Games"
         ]
 
 
@@ -67,21 +74,23 @@ class AmazonReviewDataset:
             # Check if rating is a number and text is a non-empty string
             return isinstance(entry.get("rating"), (int, float)) and isinstance(entry.get("text"), str) and len(entry["text"].strip()) > 0
 
-        
-
         # Shuffle the filtered dataset
-        shuffled_dataset = filtered_dataset.shuffle()
+        print(f"before shuffling the dataset")
+        shuffled_dataset = dataset.shuffle()
+        print(f"after shuffling the dataset")   
 
         # Split into positive and negative entries based on the threshold (rating <= 2.5)
         positive_samples = []
         negative_samples = []
-        for entry in shuffled_dataset:
+        for entry in tqdm(shuffled_dataset):
             if entry["rating"] > 2.5 and len(positive_samples) < self.num_samples_per_domain // 2:
                 positive_samples.append(entry)
             elif entry["rating"] <= 2.5 and len(negative_samples) < self.num_samples_per_domain // 2:
                 negative_samples.append(entry)
             if len(positive_samples) == self.num_samples_per_domain // 2 and len(negative_samples) == self.num_samples_per_domain // 2:
                 break
+
+        print(f"len(positive_samples): {len(positive_samples)}, len(negative_samples): {len(negative_samples)}")
 
         # Combine positive and negative samples into a single dataset
         balanced_samples = positive_samples + negative_samples
@@ -115,11 +124,11 @@ class AmazonReviewDataset:
         Dataset: The filtered and balanced "full" split of the dataset, or None if an error occurs.
         """
         if self.cache_dir: 
+            print(f"saving in cache_dir: {self.cache_dir}")
             # Load the dataset
             dataset = load_dataset(
                 "McAuley-Lab/Amazon-Reviews-2023",
                 f"raw_review_{category}",
-                cache_dir=self.cache_dir,
                 trust_remote_code=True
             )
         else: 
@@ -131,8 +140,9 @@ class AmazonReviewDataset:
             )
         print(f"Successfully downloaded dataset for category: {category}")
         
-        # Get the "full" split
-        full_split = dataset["full"]
+        # # Get the "full" split
+        # full_split = dataset["full"]
+        full_split = dataset
         
         # Filter, transform, and balance the dataset
         processed_split = self.filter_and_transform_dataset(full_split)
@@ -196,7 +206,18 @@ class AmazonReviewDataset:
         CLScenario: Incremental learning benchmark scenario.
         """
 
-        dataset_dict = self.download_all()
+        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset")
+
+        # Check if the preprocessed dataset already exists in the cache
+        if os.path.exists(processed_dataset_path):
+            print("Loading preprocessed dataset from cache directory...")
+            dataset_dict = DatasetDict.load_from_disk(processed_dataset_path)
+        else:
+            # Download and preprocess the dataset
+            dataset_dict = self.download_all()
+            # Save the preprocessed dataset to the cache directory
+            os.makedirs(self.cache_dir, exist_ok=True)
+            DatasetDict(dataset_dict).save_to_disk(processed_dataset_path)
 
         # Preprocess dataset for sequence classification
         def preprocess_function(examples):

@@ -23,15 +23,22 @@ from avalanche.evaluation.metrics import (
 from avalanche.logging import InteractiveLogger, TextLogger
 from avalanche.training.plugins import EvaluationPlugin
 
+from models.model_loader import ModuleLoader
+
 from utils.compute_metrics import *
 
 
 def main(args):
-    if args['model_name'] == "resnet":
-        # Model getter: specify dataset and depth of the network.
-        model = pytorchcv_wrapper.resnet("cifar100", depth=args['depth'], pretrained=False)
-    else: 
-        raise Exception(f"Unsupported model {args['model_name']}")
+    loader = ModuleLoader()
+
+    # Load a ResNet-18 model for 100 classes
+    model = loader.load_model(args['model_name'])
+    # print(resnet_model)
+    # if args['model_name'] == "resnet":
+    #     # Model getter: specify dataset and depth of the network.
+    #     model = pytorchcv_wrapper.resnet("cifar100", depth=args['depth'], pretrained=False)
+    # else: 
+    #     raise Exception(f"Unsupported model {args['model_name']}")
 
     # Or get a more specific model. E.g. wide resnet, with depth 40 and growth
     # factor 8 for Cifar 10.
@@ -88,6 +95,7 @@ def main(args):
 
     eval_plugin = EvaluationPlugin(
         accuracy_metrics(minibatch=False, epoch=False, experience=True, stream=False),
+        # accuracy_metrics(minibatch=False, epoch=True, experience=True, stream=False),
         # loss_metrics(minibatch=True, epoch=True, experience=True, stream=True),
         # forgetting_metrics(experience=True),
         loggers=[interactive_logger],
@@ -159,15 +167,16 @@ def main(args):
         # Separate the feature extractor and the classification head
         # feature_extractor = torch.nn.Sequential(*list(model.children())[:-1])  # Remove the last layer
         # classification_head = model.fc if hasattr(model, 'fc') else model.output  # Get the classification head
-        
-        model.output = torch.nn.Identity()
-        classification_head = torch.nn.Linear(in_features=64, out_features=100)
+        import copy
         import itertools
+
+        # Assuming model is a ResNet or similar model with a classification head
+        classification_head = copy.deepcopy(model.fc)  # Make a deep copy of the classification head
+        model.fc = torch.nn.Identity()
+        # classification_head = torch.nn.Linear(in_features=64, out_features=100)
 
         # Combine parameters from feature_extractor and classification_head
         params = itertools.chain(model.parameters(), classification_head.parameters())
-
-        print(f"model: {model}")
 
         print("stragety: icarl")
         cl_strategy = ICaRL(

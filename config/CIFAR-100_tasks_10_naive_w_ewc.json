@@ -4,11 +4,11 @@
     
     "train_mb_size": 100, 
     "test_mb_size": 100, 
-    "train_epochs": 50,
+    "train_epochs": 20,
 
     "strategy" : "naive-w-ewc",
 
-    "model_name" : "resnet", 
-    "depth": 110, 
+    "model_name" : "resnet-18-100", 
+    "depth": 20, 
     "num_tasks": 10
 }

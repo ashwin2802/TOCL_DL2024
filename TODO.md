@@ -22,5 +22,4 @@ Repeat experiments from the Cambridge Paper:
 
 
 # Run ablation
-For CIFAR-100, we want to first increase the epochs until we get decent performance on the current task being used.
-
+- Check that the implementation works, and some 
