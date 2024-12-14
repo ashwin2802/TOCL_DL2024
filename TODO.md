@@ -22,4 +22,8 @@ Repeat experiments from the Cambridge Paper:
 
 
 # Run ablation
-- Check that the implementation works, and some 
+- Right now we have the code for specifying the task groups and the ordering. However, we are stuck at the problem that the actor size is hard-coded,
+    and therefore we can have only tasks with compatible actor size. 
+- The next step is implementing an actor that has multiple heads, one for each task label. 
+-> This seems to be a problem, and we need to test the implementation further. Change a dimension at a time, i.e., first the number of outputs, 
+-> then the inputs, because this might have impact on the model. 
