@@ -16,13 +16,13 @@ with open('data/full_rl_env_mapping.json', 'r') as f:
 
 with open('data/counts.json', 'r') as f: 
     counts = json.load(f)
-    selected_envs = counts[str(18)][2:4]
+    selected_envs = counts[str(18)][2:3]
     # selected_envs = list(task_id_to_model_shape.keys())
 
 # Model
-model = MultiEnvActorCriticMLP(task_id_to_model_shape, actor_hidden_sizes=[1024, 1024], critic_hidden_sizes=[1024, 1024])
-# num_inputs, num_actions = map(int, task_id_to_model_shape["ALE/Tetris-ram-v5"])
-# model = ActorCriticMLP(num_inputs=num_inputs, num_actions=num_actions, actor_hidden_sizes=[1024, 1024], critic_hidden_sizes=[1024, 1024])
+# model = ActorCriticMLP(task_id_to_model_shape, actor_hidden_sizes=[1024, 1024], critic_hidden_sizes=[1024, 1024])
+num_inputs, num_actions = map(int, task_id_to_model_shape[selected_envs[0]])
+model = ActorCriticMLP(num_inputs=num_inputs, num_actions=num_actions, actor_hidden_sizes=[1024, 1024], critic_hidden_sizes=[1024, 1024])
 
 environments_in_exps = []
 for i in range(len(selected_envs) // 2): 

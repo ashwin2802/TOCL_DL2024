@@ -7,26 +7,16 @@
         128,
         5
     ],
+
     "ALE/Asterix-ram-v5": [
         128,
         9
-    ],
-    "ALE/Freeway-ram-v5": [
-        128,
-        3
     ],
     "ALE/MsPacman-ram-v5": [
         128,
         9
     ],
-    "ALE/Kaboom-ram-v5": [
-        128,
-        4
-    ],
-    "ALE/BeamRider-ram-v5": [
-        128,
-        9
-    ],
+
     "ALE/Centipede-ram-v5": [
         128,
         18
@@ -35,6 +25,7 @@
         128,
         18
     ],
+
     "ALE/Riverraid-ram-v5": [
         128,
         18
@@ -43,10 +34,7 @@
         128,
         18
     ],
-    "ALE/Tutankham-ram-v5": [
-        128,
-        8
-    ],
+
     "ALE/Pitfall-ram-v5": [
         128,
         18
@@ -63,20 +51,13 @@
         128,
         18
     ],
-    "ALE/Skiing-ram-v5": [
-        128,
-        3
-    ],
-    "ALE/WizardOfWor-ram-v5": [
-        128,
-        10
-    ],
+
     "ALE/VideoPinball-ram-v5": [
         128,
         9
     ],
-    "ALE/MontezumaRevenge-ram-v5": [
+    "ALE/BeamRider-ram-v5": [
         128,
-        18
+        9
     ]
 }
