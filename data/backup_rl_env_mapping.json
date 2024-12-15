@@ -9,7 +9,7 @@
     ],
     "ALE/Asterix-ram-v5": [
         128,
-        9
+        5
     ],
     "ALE/Freeway-ram-v5": [
         128,
@@ -17,11 +17,11 @@
     ],
     "ALE/MsPacman-ram-v5": [
         128,
-        9
+        3
     ],
     "ALE/Kaboom-ram-v5": [
         128,
-        4
+        3
     ],
     "ALE/BeamRider-ram-v5": [
         128,
@@ -29,7 +29,7 @@
     ],
     "ALE/Centipede-ram-v5": [
         128,
-        18
+        9
     ],
     "ALE/Frostbite-ram-v5": [
         128,
@@ -49,11 +49,11 @@
     ],
     "ALE/Pitfall-ram-v5": [
         128,
-        18
+        8
     ],
     "ALE/Boxing-ram-v5": [
         128,
-        18
+        8
     ],
     "ALE/IceHockey-ram-v5": [
         128,
@@ -69,7 +69,7 @@
     ],
     "ALE/WizardOfWor-ram-v5": [
         128,
-        10
+        3
     ],
     "ALE/VideoPinball-ram-v5": [
         128,

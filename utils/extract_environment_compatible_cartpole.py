@@ -71,7 +71,7 @@ env_mapping = {
 }
 
 # Save the mapping to a JSON file
-json_path = "data/rl_env_mapping.json"
+json_path = "data/full_rl_env_mapping.json"
 with open(json_path, "w") as json_file:
     json.dump(env_mapping, json_file, indent=4)
 

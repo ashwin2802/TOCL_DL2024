@@ -20,6 +20,9 @@ Repeat experiments from the Cambridge Paper:
     again, plot the metrics for visualizing what is going on
 - implement ResNet-18 from the module loader and train on a fixed number of epochs for MNIST and CIFAR-100
 
+# But first, make experiments with the amazon_review_dataset and delete the data from pc
+Make run both with fine-tuning existing model, and pretrain a tiny bert from scatch. 
+Implement metric for groping at this point is more important. 
 
 # Run ablation
 - Right now we have the code for specifying the task groups and the ordering. However, we are stuck at the problem that the actor size is hard-coded,
