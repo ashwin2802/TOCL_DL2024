@@ -7,7 +7,7 @@
 
     "strategy": "naive",
     "num_samples_per_domain": 50000,
-    "domain_groups": "random-2", 
+    "domain_groups": "random-3", 
     
     "train_mb_size": 100, 
     "test_mb_size": 100, 

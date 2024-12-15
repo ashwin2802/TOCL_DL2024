@@ -122,11 +122,11 @@ class AmazonReviewDataset:
         Dataset: The filtered and balanced "full" split of the dataset, or None if an error occurs.
         """
         if self.cache_dir: 
-            print(f"saving in cache_dir: {self.cache_dir}")
             # Load the dataset
             dataset = load_dataset(
                 "McAuley-Lab/Amazon-Reviews-2023",
                 f"raw_review_{category}",
+                cache_dir=self.cache_dir,
                 trust_remote_code=True
             )
         else: 
@@ -203,14 +203,15 @@ class AmazonReviewDataset:
         Returns:
         CLScenario: Incremental learning benchmark scenario.
         """
-        from datasets.config import HF_DATASETS_CACHE
+        # from datasets.config import HF_DATASETS_CACHE
         import os
 
         # Use default cache directory for Hugging Face datasets
-        processed_dataset_path = os.path.join(HF_DATASETS_CACHE, "amazon_review_dataset")
+        # processed_dataset_path = os.path.join(HF_DATASETS_CACHE, "amazon_review_dataset")
+        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset_2000")
 
         # Print the resolved path
-        print(f"Processed dataset will be saved in: {processed_dataset_path}")
+        # print(f"Processed dataset will be saved in: {processed_dataset_path}")
 
         # Check if the preprocessed dataset already exists in the cache
         if os.path.exists(processed_dataset_path):
@@ -241,6 +242,23 @@ class AmazonReviewDataset:
 
         if self.domain_groups is None:
             domain_groups = [{domain} for domain in dataset_dict.keys()]
+        elif isinstance(self.domain_groups, str): 
+            mode, num_domains_per_group = self.domain_groups.split('-')
+            num_domains_per_group = int(num_domains_per_group)
+
+            import random 
+            import math
+
+            indices = list(range(len(self.categories)))
+            random.shuffle(indices)
+
+            domain_groups = []
+            for i in range(math.ceil(len(indices) / 2)):
+                new_group = [self.categories[indices[min(len(indices) - 1, num_domains_per_group * i + j)]] for j in range(num_domains_per_group)]
+                new_group = list(set(new_group))
+                domain_groups.append(new_group)
+
+            print(f"domain_groups: {domain_groups}")
 
         train_exps = []
         test_exps = []

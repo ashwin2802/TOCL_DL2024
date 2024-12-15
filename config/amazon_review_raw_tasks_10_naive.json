@@ -1,9 +1,9 @@
 {
-    "model_name": "bert-base-uncased", 
+    "model_name": "huawei-noah/TinyBERT_General_4L_312D", 
     
     "cache_dir": "/cluster/scratch/rrigoni/.cache/huggingface",
     "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/Amazon_Review_{}_{}_tasks_{}_strategy_{}.json",
-    "pretrained": true,
+    "pretrained": false,
 
     "strategy": "naive",
     "num_samples_per_domain": 50000,
@@ -11,6 +11,6 @@
     
     "train_mb_size": 100, 
     "test_mb_size": 100, 
-    "train_epochs": 3
+    "train_epochs": 30
 
 }
