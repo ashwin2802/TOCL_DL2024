@@ -217,6 +217,7 @@ class AmazonReviewDataset:
             print("Loading preprocessed dataset from cache directory...")
             dataset_dict = DatasetDict.load_from_disk(processed_dataset_path)
         else:
+            print(f"Creating file because missing")
             # Download and preprocess the dataset
             dataset_dict = self.download_all()
             # Save the preprocessed dataset to the cache directory

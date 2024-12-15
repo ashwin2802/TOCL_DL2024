@@ -13,7 +13,8 @@ from avalanche.training.plugins import ReplayPlugin
 from avalanche.training.plugins.evaluation import EvaluationPlugin
 from avalanche.logging import InteractiveLogger
 from avalanche.evaluation.metrics import (
-    accuracy_metrics
+    accuracy_metrics, 
+    loss_metrics
 )
 
 from utils.compute_metrics import *
@@ -28,10 +29,10 @@ def main(args):
 
     tokenizer = AutoTokenizer.from_pretrained(args['model_name'])
     
-    config = BertConfig.from_pretrained(args['model_name'], num_labels=2)
-    model = BertForSequenceClassification(config).to(device)
+    # config = BertConfig.from_pretrained(args['model_name'], num_labels=2)
+    # model = BertForSequenceClassification(config).to(device)
     
-    # model = BertForSequenceClassification.from_pretrained(args['model_name'], num_labels=2).to(device)
+    model = BertForSequenceClassification.from_pretrained(args['model_name'], num_labels=2).to(device)
 
     data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=tokenizer, model=model)
 
@@ -41,7 +42,8 @@ def main(args):
     # Evaluation plugin
     eval_plugin = EvaluationPlugin(
         # loss_metrics(epoch=True, experience=True, stream=True),
-        accuracy_metrics(minibatch=False, epoch=False, experience=True, stream=False),
+        accuracy_metrics(minibatch=False, epoch=True, experience=True, stream=False),
+        loss_metrics(minibatch=True),
         loggers=[InteractiveLogger()],
     )
 
