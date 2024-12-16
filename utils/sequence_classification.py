@@ -89,13 +89,9 @@ class HGNaive(avalanche.training.Naive):
         self.mbatch["input_ids"] = batched_input_ids
 
     def forward(self):
-        out = self.model(
-            input_ids=self.mb_x,
-            attention_mask=self.mb_attention_mask,
-            labels=self.mb_y,
-        )
-        return out.logits
-
+        out = self.model(self.mb_x)
+        return out
+        
     def criterion(self):
         mb_output = self.mb_output.view(-1, self.mb_output.size(-1))
         ll = self._criterion(mb_output, self.mb_y.view(-1))
@@ -151,7 +147,7 @@ class HGICaRL(avalanche.training.ICaRL):
         self.mbatch["input_ids"] = batched_input_ids
 
     def forward(self):
-        print(f"self.mb_x: {self.mb_x}")
+        # print(f"self.mb_x: {self.mb_x}")
         input = {'input_ids': self.mb_x, 'attention_mask': self.mb_attention_mask}
         # out = self.model(
         #     input_ids=self.mb_x,

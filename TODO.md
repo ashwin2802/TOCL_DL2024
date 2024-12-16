@@ -32,6 +32,7 @@ Implement metric for groping at this point is more important.
 -> then the inputs, because this might have impact on the model. 
 
 Sequence to Sequence: 
-- figure out the best training epochs for BertModel on the full dataset, to see which is the highest scores we can get. 
-- stick to this for the rest of the experiements
-- implement the other training stategies in the mean time
+- we have the iCaRL for sequence classification being working, and now it is a matter of running some experiments. 
+- which are the experiments and the dimensions to even investigate? 
+
+- find the best mixing coefficient for the iCaRL famework

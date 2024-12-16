@@ -2,15 +2,16 @@
     "model_name": "bert-base-uncased", 
     
     "cache_dir": "/cluster/scratch/rrigoni/.cache/huggingface",
-    "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/Amazon_Review_{}_{}_tasks_{}_strategy_{}.json",
-    "pretrained": true,
+    "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/amazon_review_{}_tasks_{}_{}_epochs_{}_alpha_{}.json",
 
-    "strategy": "naive",
+    "strategy": "icarl",
     "num_samples_per_domain": 50000,
     "domain_groups": "random-3", 
     
     "train_mb_size": 100, 
     "test_mb_size": 100, 
-    "train_epochs": 3
+    "train_epochs": 1,
+
+    "alpha": 1.0
 
 }

@@ -18,16 +18,9 @@ class AmazonReviewDataset:
     """
     A class to manage the download and processing of Amazon Review datasets for various categories.
     """
-    def __init__(self, num_samples_per_domain, domain_groups, tokenizer, model, cache_dir=None):
-        self.domain_groups = domain_groups
+    def __init__(self, tokenizer, cache_dir=None):
         self.tokenizer = tokenizer
-        self.model = model
-        self.num_samples_per_domain = num_samples_per_domain
         self.cache_dir = cache_dir
-
-        # Set the desired cache directory
-        if self.cache_dir: 
-            os.environ["HF_DATASETS_CACHE"] = self.cache_dir
 
         # Initialize the list of categories
         self.categories = [
@@ -190,135 +183,103 @@ class AmazonReviewDataset:
             "test": Dataset.from_pandas(test_df)
         })
     
-    def create_benchmark(self):
+    def create_benchmark(self, domain_groups):
         """
-        Creates training and testing streams for incremental domain learning.
-
-        Parameters:
-        dataset_dict (dict): Dictionary of datasets with "train" and "test" splits.
-        domain_groups (list of sets): Groups of domains to combine. If None, treat domains individually.
-        tokenizer: Tokenizer object for preprocessing text.
-        model: Model for custom data collator.
+        Creates a dataset with train and test splits, organized by domains.
+        Each domain in the splits contains input IDs, attention masks, and labels.
 
         Returns:
-        CLScenario: Incremental learning benchmark scenario.
+        dict: Dictionary with "train" and "test" splits, where each split is 
+            further organized by domains.
         """
         from datasets.config import HF_DATASETS_CACHE
         import os
 
         # Use default cache directory for Hugging Face datasets
-        # processed_dataset_path = os.path.join(HF_DATASETS_CACHE, "amazon_review_dataset_2000")
-        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset")
-
-        # Print the resolved path
-        # print(f"Processed dataset will be saved in: {processed_dataset_path}")
+        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset_2000")
 
         # Check if the preprocessed dataset already exists in the cache
         if os.path.exists(processed_dataset_path):
             print("Loading preprocessed dataset from cache directory...")
             dataset_dict = DatasetDict.load_from_disk(processed_dataset_path)
         else:
-            print(f"Creating file because missing")
+            print("Creating file because missing")
             # Download and preprocess the dataset
             dataset_dict = self.download_all()
-            # Save the preprocessed dataset to the cache directory
-            # os.makedirs(, exist_ok=True)
             DatasetDict(dataset_dict).save_to_disk(processed_dataset_path)
             print(f"Dataset saved at path: {processed_dataset_path}")
-
+        
         # Preprocess dataset for sequence classification
         def preprocess_function(examples):
-            # print(f"examples: {examples}")
-            inputs = self.tokenizer(examples["text"], max_length=256, truncation=True, padding="max_length")
+            inputs = self.tokenizer(examples["text"], max_length=256, truncation=True, padding="max_length", return_tensors="pt")
             inputs["labels"] = examples["label"]
-            # inputs["domain"] = examples["domain"]
             return inputs
 
-        # Apply preprocessing and keep only specified columns
+        # Apply preprocessing to the dataset
         dataset_dict = {
-            key: value.map(preprocess_function, batched=True).select_columns(["input_ids", "attention_mask", "labels"])
+            key: value.map(preprocess_function, batched=True)
             for key, value in dataset_dict.items()
         }
 
-        if self.domain_groups is None:
-            domain_groups = [{domain} for domain in dataset_dict.keys()]
-        elif isinstance(self.domain_groups, str): 
-            mode, num_domains_per_group = self.domain_groups.split('-')
-            num_domains_per_group = int(num_domains_per_group)
+        if domain_groups: 
+            domain2id_mapping = {}
+            counter = 0
+            for group in domain_groups: 
+                for domain in group: 
+                    domain2id_mapping[domain] = counter
+                    counter += 1
+        else: 
+            # return result_dataset, domain2id_mapping
+            raise Exception(f"Please specify domain_groups (generate random ones outside the function invokation)")
 
-            import random 
-            import math
+        # Create domain groups if specified, otherwise use individual domains
+        initial_domain_groups = [{domain} for domain in domain2id_mapping.keys()]
 
-            indices = list(range(len(self.categories)))
-            random.shuffle(indices)
+        # Split the dataset into train and test for each domain - using stratified positive and negative labels
+        result_dataset = {"train": {}, "test": {}}
 
-            domain_groups = []
-            for i in range(math.ceil(len(indices) / 2)):
-                new_group = [self.categories[indices[min(len(indices) - 1, num_domains_per_group * i + j)]] for j in range(num_domains_per_group)]
-                new_group = list(set(new_group))
-                domain_groups.append(new_group)
-
-            print(f"domain_groups: {domain_groups}")
-
-        train_exps = []
-        test_exps = []
-        data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=self.tokenizer, model=self.model)
-
-        for task_id, group in enumerate(domain_groups):
-            train_datasets = []
-            test_datasets = []
-
+        for group in initial_domain_groups:
             for domain in group:
                 domain_dataset = dataset_dict[domain]
-                domain_dataset = self.stratify_split(domain_dataset)
-                train_datasets.append(domain_dataset["train"])
-                test_datasets.append(domain_dataset["test"])
-
-            combined_train = concatenate_datasets(train_datasets)
-            combined_test = concatenate_datasets(test_datasets)
-
-            # Training experience
-            tl_train = DataAttribute(ConstantSequence(task_id, len(combined_train)), "targets_task_labels")
-            exp_train = CLExperience(task_id, None)
-            exp_train.dataset = AvalancheDataset(
-                [combined_train],
-                data_attributes=[tl_train],
-                collate_fn=data_collator
-            )
-            exp_train.dataset.targets = [task_id] * len(combined_train['labels'])
-            train_exps.append(exp_train)
-
-            # Testing experience
-            tl_test = DataAttribute(ConstantSequence(task_id, len(combined_test)), "targets_task_labels")
-            exp_test = CLExperience(task_id, None)
-            exp_test.dataset = AvalancheDataset(
-                [combined_test],
-                data_attributes=[tl_test],
-                collate_fn=data_collator
-            )
-            exp_test.dataset.targets = [task_id] * len(combined_train['labels'])
-            test_exps.append(exp_test)
-
-        # Create incremental benchmark scenario
-        # For every experience, reference the CLScenario itself
-        benchmark = CLScenario(
-            [
-                CLStream("train", train_exps),
-                CLStream("test", test_exps),
-            ]
-        )
-
-        benchmark.n_classes_per_exp = [1] * len(train_exps)
-        benchmark.classes_order = list(range(len(train_exps)))
-
-        for experience in benchmark.train_stream: 
-            experience.benchmark = benchmark
-
-        for experience in benchmark.test_stream:
-            experience.benchmark = benchmark
+                # Stratify the split (assumes stratify_split returns a dict with "train" and "test")
+                domain_split = self.stratify_split(domain_dataset)
+                
+                # Add preprocessed train and test splits to result
+                result_dataset["train"][domain] = domain_split["train"].select_columns(
+                    ["input_ids", "attention_mask", "labels"]
+                )
+                result_dataset["test"][domain] = domain_split["test"].select_columns(
+                    ["input_ids", "attention_mask", "labels"]
+                )
 
         
+        for split in result_dataset.keys():  # Iterate over splits (e.g., "train" and "test")
+            for domain, dataset in result_dataset[split].items():  # Iterate over domains within the split
+                domain_id = domain2id_mapping[domain]
+                # Map each entry's label to the domain ID
+                result_dataset[split][domain] = dataset.map(
+                    lambda batch: {**batch, "labels": [domain_id] * len(batch["labels"])},  # Correctly broadcast domain_id
+                    batched=True
+                )
+        
+        if domain_groups: 
+            grouped_dataset = {"train": {}, "test": {}}
 
+            for split in result_dataset.keys():  # Iterate over splits ("train", "test")
+                for group_idx, group in enumerate(domain_groups):  # Iterate over partitions
+                    # print(f"split: {split}, group: {group}")
+                    grouped_domains = []
+                    for domain in group:
+                        if domain in result_dataset[split]:  # Check if domain exists in split
+                            grouped_domains.append(result_dataset[split][domain])
+                    # Concatenate datasets for the current group
+                    if grouped_domains:
+                        grouped_dataset[split][f"group_{group_idx}"] = concatenate_datasets(grouped_domains)
+            
+            return grouped_dataset, domain2id_mapping
+        else: 
+            # return result_dataset, domain2id_mapping
+            raise Exception(f"Please specify domain_groups (generate random ones outside the function invokation)")
 
 # Example usage
 if __name__ == "__main__":
