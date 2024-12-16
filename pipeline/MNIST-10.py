@@ -7,7 +7,7 @@ from avalanche.benchmarks.classic import SplitMNIST
 from avalanche.models import SimpleMLP # change with better architecture
 from avalanche.training.supervised import Naive
 
-from evaluation.compute_metrics import *
+from compute_metrics import *
 
 from avalanche.logging import (
     TextLogger,

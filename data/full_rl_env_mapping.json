@@ -1,0 +1,2334 @@
+{
+    "ALE/Tetris-v5": [
+        210,
+        5
+    ],
+    "ALE/Tetris-ram-v5": [
+        128,
+        5
+    ],
+    "ALE/Asterix-v5": [
+        210,
+        9
+    ],
+    "ALE/Asterix-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/Asteroids-v5": [
+        210,
+        14
+    ],
+    "ALE/Asteroids-ram-v5": [
+        128,
+        14
+    ],
+    "ALE/MsPacman-v5": [
+        210,
+        9
+    ],
+    "ALE/MsPacman-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/Kaboom-v5": [
+        210,
+        4
+    ],
+    "ALE/Kaboom-ram-v5": [
+        128,
+        4
+    ],
+    "ALE/BankHeist-v5": [
+        210,
+        18
+    ],
+    "ALE/BankHeist-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Backgammon-v5": [
+        210,
+        3
+    ],
+    "ALE/Backgammon-ram-v5": [
+        128,
+        3
+    ],
+    "ALE/Klax-v5": [
+        250,
+        18
+    ],
+    "ALE/Klax-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Crossbow-v5": [
+        210,
+        18
+    ],
+    "ALE/Crossbow-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Kangaroo-v5": [
+        210,
+        18
+    ],
+    "ALE/Kangaroo-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Skiing-v5": [
+        210,
+        3
+    ],
+    "ALE/Skiing-ram-v5": [
+        128,
+        3
+    ],
+    "ALE/FishingDerby-v5": [
+        210,
+        18
+    ],
+    "ALE/FishingDerby-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Krull-v5": [
+        210,
+        18
+    ],
+    "ALE/Krull-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/FlagCapture-v5": [
+        210,
+        18
+    ],
+    "ALE/FlagCapture-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/BasicMath-v5": [
+        210,
+        6
+    ],
+    "ALE/BasicMath-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Berzerk-v5": [
+        210,
+        18
+    ],
+    "ALE/Berzerk-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Tutankham-v5": [
+        210,
+        8
+    ],
+    "ALE/Tutankham-ram-v5": [
+        128,
+        8
+    ],
+    "ALE/MarioBros-v5": [
+        210,
+        18
+    ],
+    "ALE/MarioBros-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Zaxxon-v5": [
+        210,
+        18
+    ],
+    "ALE/Zaxxon-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Venture-v5": [
+        210,
+        18
+    ],
+    "ALE/Venture-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Riverraid-v5": [
+        210,
+        18
+    ],
+    "ALE/Riverraid-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Centipede-v5": [
+        210,
+        18
+    ],
+    "ALE/Centipede-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/WordZapper-v5": [
+        210,
+        18
+    ],
+    "ALE/WordZapper-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Adventure-v5": [
+        250,
+        18
+    ],
+    "ALE/Adventure-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/BeamRider-v5": [
+        210,
+        9
+    ],
+    "ALE/BeamRider-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/CrazyClimber-v5": [
+        210,
+        9
+    ],
+    "ALE/CrazyClimber-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/TimePilot-v5": [
+        210,
+        10
+    ],
+    "ALE/TimePilot-ram-v5": [
+        128,
+        10
+    ],
+    "ALE/Carnival-v5": [
+        214,
+        6
+    ],
+    "ALE/Carnival-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Tennis-v5": [
+        210,
+        18
+    ],
+    "ALE/Tennis-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Seaquest-v5": [
+        210,
+        18
+    ],
+    "ALE/Seaquest-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Bowling-v5": [
+        210,
+        6
+    ],
+    "ALE/Bowling-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/SpaceInvaders-v5": [
+        210,
+        6
+    ],
+    "ALE/SpaceInvaders-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Pitfall2-v5": [
+        210,
+        18
+    ],
+    "ALE/Pitfall2-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Freeway-v5": [
+        210,
+        3
+    ],
+    "ALE/Freeway-ram-v5": [
+        128,
+        3
+    ],
+    "ALE/YarsRevenge-v5": [
+        210,
+        18
+    ],
+    "ALE/YarsRevenge-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Casino-v5": [
+        210,
+        4
+    ],
+    "ALE/Casino-ram-v5": [
+        128,
+        4
+    ],
+    "ALE/RoadRunner-v5": [
+        210,
+        18
+    ],
+    "ALE/RoadRunner-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/MiniatureGolf-v5": [
+        210,
+        18
+    ],
+    "ALE/MiniatureGolf-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/JourneyEscape-v5": [
+        230,
+        16
+    ],
+    "ALE/JourneyEscape-ram-v5": [
+        128,
+        16
+    ],
+    "ALE/WizardOfWor-v5": [
+        210,
+        10
+    ],
+    "ALE/WizardOfWor-ram-v5": [
+        128,
+        10
+    ],
+    "ALE/DonkeyKong-v5": [
+        210,
+        18
+    ],
+    "ALE/DonkeyKong-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Gopher-v5": [
+        210,
+        8
+    ],
+    "ALE/Gopher-ram-v5": [
+        128,
+        8
+    ],
+    "ALE/Breakout-v5": [
+        210,
+        4
+    ],
+    "ALE/Breakout-ram-v5": [
+        128,
+        4
+    ],
+    "ALE/StarGunner-v5": [
+        210,
+        18
+    ],
+    "ALE/StarGunner-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Othello-v5": [
+        210,
+        10
+    ],
+    "ALE/Othello-ram-v5": [
+        128,
+        10
+    ],
+    "ALE/Atlantis-v5": [
+        210,
+        4
+    ],
+    "ALE/Atlantis-ram-v5": [
+        128,
+        4
+    ],
+    "ALE/TicTacToe3D-v5": [
+        210,
+        10
+    ],
+    "ALE/TicTacToe3D-ram-v5": [
+        128,
+        10
+    ],
+    "ALE/DoubleDunk-v5": [
+        210,
+        18
+    ],
+    "ALE/DoubleDunk-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Hero-v5": [
+        210,
+        18
+    ],
+    "ALE/Hero-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/BattleZone-v5": [
+        210,
+        18
+    ],
+    "ALE/BattleZone-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/KeystoneKapers-v5": [
+        250,
+        14
+    ],
+    "ALE/KeystoneKapers-ram-v5": [
+        128,
+        14
+    ],
+    "ALE/Solaris-v5": [
+        210,
+        18
+    ],
+    "ALE/Solaris-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/UpNDown-v5": [
+        210,
+        6
+    ],
+    "ALE/UpNDown-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Frostbite-v5": [
+        210,
+        18
+    ],
+    "ALE/Frostbite-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/VideoCheckers-v5": [
+        210,
+        5
+    ],
+    "ALE/VideoCheckers-ram-v5": [
+        128,
+        5
+    ],
+    "ALE/KungFuMaster-v5": [
+        210,
+        14
+    ],
+    "ALE/KungFuMaster-ram-v5": [
+        128,
+        14
+    ],
+    "ALE/Trondead-v5": [
+        210,
+        18
+    ],
+    "ALE/Trondead-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Earthworld-v5": [
+        210,
+        18
+    ],
+    "ALE/Earthworld-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Koolaid-v5": [
+        210,
+        9
+    ],
+    "ALE/Koolaid-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/Pooyan-v5": [
+        220,
+        6
+    ],
+    "ALE/Pooyan-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Pitfall-v5": [
+        210,
+        18
+    ],
+    "ALE/Pitfall-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Turmoil-v5": [
+        210,
+        12
+    ],
+    "ALE/Turmoil-ram-v5": [
+        128,
+        12
+    ],
+    "ALE/Videochess-v5": [
+        210,
+        10
+    ],
+    "ALE/Videochess-ram-v5": [
+        128,
+        10
+    ],
+    "ALE/Entombed-v5": [
+        210,
+        18
+    ],
+    "ALE/Entombed-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/MontezumaRevenge-v5": [
+        210,
+        18
+    ],
+    "ALE/MontezumaRevenge-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/PrivateEye-v5": [
+        210,
+        18
+    ],
+    "ALE/PrivateEye-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Surround-v5": [
+        210,
+        5
+    ],
+    "ALE/Surround-ram-v5": [
+        128,
+        5
+    ],
+    "ALE/AirRaid-v5": [
+        250,
+        6
+    ],
+    "ALE/AirRaid-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Amidar-v5": [
+        210,
+        10
+    ],
+    "ALE/Amidar-ram-v5": [
+        128,
+        10
+    ],
+    "ALE/SpaceWar-v5": [
+        250,
+        18
+    ],
+    "ALE/SpaceWar-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Pacman-v5": [
+        250,
+        5
+    ],
+    "ALE/Pacman-ram-v5": [
+        128,
+        5
+    ],
+    "ALE/Robotank-v5": [
+        210,
+        18
+    ],
+    "ALE/Robotank-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/LostLuggage-v5": [
+        210,
+        9
+    ],
+    "ALE/LostLuggage-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/DemonAttack-v5": [
+        210,
+        6
+    ],
+    "ALE/DemonAttack-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Defender-v5": [
+        210,
+        18
+    ],
+    "ALE/Defender-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/NameThisGame-v5": [
+        210,
+        6
+    ],
+    "ALE/NameThisGame-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Phoenix-v5": [
+        210,
+        8
+    ],
+    "ALE/Phoenix-ram-v5": [
+        128,
+        8
+    ],
+    "ALE/Gravitar-v5": [
+        210,
+        18
+    ],
+    "ALE/Gravitar-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Atlantis2-v5": [
+        210,
+        4
+    ],
+    "ALE/Atlantis2-ram-v5": [
+        128,
+        4
+    ],
+    "ALE/LaserGates-v5": [
+        250,
+        18
+    ],
+    "ALE/LaserGates-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/ElevatorAction-v5": [
+        210,
+        18
+    ],
+    "ALE/ElevatorAction-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Pong-v5": [
+        210,
+        6
+    ],
+    "ALE/Pong-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Hangman-v5": [
+        210,
+        18
+    ],
+    "ALE/Hangman-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/SirLancelot-v5": [
+        250,
+        6
+    ],
+    "ALE/SirLancelot-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/VideoPinball-v5": [
+        210,
+        9
+    ],
+    "ALE/VideoPinball-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/IceHockey-v5": [
+        210,
+        18
+    ],
+    "ALE/IceHockey-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Boxing-v5": [
+        210,
+        18
+    ],
+    "ALE/Boxing-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/HauntedHouse-v5": [
+        210,
+        18
+    ],
+    "ALE/HauntedHouse-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Assault-v5": [
+        210,
+        7
+    ],
+    "ALE/Assault-ram-v5": [
+        128,
+        7
+    ],
+    "ALE/Alien-v5": [
+        210,
+        18
+    ],
+    "ALE/Alien-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Qbert-v5": [
+        210,
+        6
+    ],
+    "ALE/Qbert-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Enduro-v5": [
+        210,
+        9
+    ],
+    "ALE/Enduro-ram-v5": [
+        128,
+        9
+    ],
+    "ALE/Videocube-v5": [
+        210,
+        18
+    ],
+    "ALE/Videocube-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Et-v5": [
+        210,
+        18
+    ],
+    "ALE/Et-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/KingKong-v5": [
+        250,
+        6
+    ],
+    "ALE/KingKong-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/MrDo-v5": [
+        250,
+        10
+    ],
+    "ALE/MrDo-ram-v5": [
+        128,
+        10
+    ],
+    "ALE/Blackjack-v5": [
+        210,
+        4
+    ],
+    "ALE/Blackjack-ram-v5": [
+        128,
+        4
+    ],
+    "ALE/ChopperCommand-v5": [
+        210,
+        18
+    ],
+    "ALE/ChopperCommand-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Galaxian-v5": [
+        210,
+        6
+    ],
+    "ALE/Galaxian-ram-v5": [
+        128,
+        6
+    ],
+    "ALE/Frogger-v5": [
+        210,
+        5
+    ],
+    "ALE/Frogger-ram-v5": [
+        128,
+        5
+    ],
+    "ALE/Darkchambers-v5": [
+        210,
+        18
+    ],
+    "ALE/Darkchambers-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Jamesbond-v5": [
+        210,
+        18
+    ],
+    "ALE/Jamesbond-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/HumanCannonball-v5": [
+        210,
+        18
+    ],
+    "ALE/HumanCannonball-ram-v5": [
+        128,
+        18
+    ],
+    "ALE/Superman-v5": [
+        210,
+        18
+    ],
+    "ALE/Superman-ram-v5": [
+        128,
+        18
+    ],
+    "Adventure-v4": [
+        250,
+        18
+    ],
+    "AdventureDeterministic-v4": [
+        250,
+        18
+    ],
+    "AdventureNoFrameskip-v4": [
+        250,
+        18
+    ],
+    "Adventure-ram-v4": [
+        128,
+        18
+    ],
+    "Adventure-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Adventure-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "AirRaid-v4": [
+        250,
+        6
+    ],
+    "AirRaidDeterministic-v4": [
+        250,
+        6
+    ],
+    "AirRaidNoFrameskip-v4": [
+        250,
+        6
+    ],
+    "AirRaid-ram-v4": [
+        128,
+        6
+    ],
+    "AirRaid-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "AirRaid-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "Alien-v4": [
+        210,
+        18
+    ],
+    "AlienDeterministic-v4": [
+        210,
+        18
+    ],
+    "AlienNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Alien-ram-v4": [
+        128,
+        18
+    ],
+    "Alien-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Alien-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Amidar-v4": [
+        210,
+        10
+    ],
+    "AmidarDeterministic-v4": [
+        210,
+        10
+    ],
+    "AmidarNoFrameskip-v4": [
+        210,
+        10
+    ],
+    "Amidar-ram-v4": [
+        128,
+        10
+    ],
+    "Amidar-ramDeterministic-v4": [
+        128,
+        10
+    ],
+    "Amidar-ramNoFrameskip-v4": [
+        128,
+        10
+    ],
+    "Assault-v4": [
+        210,
+        7
+    ],
+    "AssaultDeterministic-v4": [
+        210,
+        7
+    ],
+    "AssaultNoFrameskip-v4": [
+        210,
+        7
+    ],
+    "Assault-ram-v4": [
+        128,
+        7
+    ],
+    "Assault-ramDeterministic-v4": [
+        128,
+        7
+    ],
+    "Assault-ramNoFrameskip-v4": [
+        128,
+        7
+    ],
+    "Asterix-v4": [
+        210,
+        9
+    ],
+    "AsterixDeterministic-v4": [
+        210,
+        9
+    ],
+    "AsterixNoFrameskip-v4": [
+        210,
+        9
+    ],
+    "Asterix-ram-v4": [
+        128,
+        9
+    ],
+    "Asterix-ramDeterministic-v4": [
+        128,
+        9
+    ],
+    "Asterix-ramNoFrameskip-v4": [
+        128,
+        9
+    ],
+    "Asteroids-v4": [
+        210,
+        14
+    ],
+    "AsteroidsDeterministic-v4": [
+        210,
+        14
+    ],
+    "AsteroidsNoFrameskip-v4": [
+        210,
+        14
+    ],
+    "Asteroids-ram-v4": [
+        128,
+        14
+    ],
+    "Asteroids-ramDeterministic-v4": [
+        128,
+        14
+    ],
+    "Asteroids-ramNoFrameskip-v4": [
+        128,
+        14
+    ],
+    "Atlantis-v4": [
+        210,
+        4
+    ],
+    "AtlantisDeterministic-v4": [
+        210,
+        4
+    ],
+    "AtlantisNoFrameskip-v4": [
+        210,
+        4
+    ],
+    "Atlantis-ram-v4": [
+        128,
+        4
+    ],
+    "Atlantis-ramDeterministic-v4": [
+        128,
+        4
+    ],
+    "Atlantis-ramNoFrameskip-v4": [
+        128,
+        4
+    ],
+    "BankHeist-v4": [
+        210,
+        18
+    ],
+    "BankHeistDeterministic-v4": [
+        210,
+        18
+    ],
+    "BankHeistNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "BankHeist-ram-v4": [
+        128,
+        18
+    ],
+    "BankHeist-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "BankHeist-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "BattleZone-v4": [
+        210,
+        18
+    ],
+    "BattleZoneDeterministic-v4": [
+        210,
+        18
+    ],
+    "BattleZoneNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "BattleZone-ram-v4": [
+        128,
+        18
+    ],
+    "BattleZone-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "BattleZone-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "BeamRider-v4": [
+        210,
+        9
+    ],
+    "BeamRiderDeterministic-v4": [
+        210,
+        9
+    ],
+    "BeamRiderNoFrameskip-v4": [
+        210,
+        9
+    ],
+    "BeamRider-ram-v4": [
+        128,
+        9
+    ],
+    "BeamRider-ramDeterministic-v4": [
+        128,
+        9
+    ],
+    "BeamRider-ramNoFrameskip-v4": [
+        128,
+        9
+    ],
+    "Berzerk-v4": [
+        210,
+        18
+    ],
+    "BerzerkDeterministic-v4": [
+        210,
+        18
+    ],
+    "BerzerkNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Berzerk-ram-v4": [
+        128,
+        18
+    ],
+    "Berzerk-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Berzerk-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Bowling-v4": [
+        210,
+        6
+    ],
+    "BowlingDeterministic-v4": [
+        210,
+        6
+    ],
+    "BowlingNoFrameskip-v4": [
+        210,
+        6
+    ],
+    "Bowling-ram-v4": [
+        128,
+        6
+    ],
+    "Bowling-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "Bowling-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "Boxing-v4": [
+        210,
+        18
+    ],
+    "BoxingDeterministic-v4": [
+        210,
+        18
+    ],
+    "BoxingNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Boxing-ram-v4": [
+        128,
+        18
+    ],
+    "Boxing-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Boxing-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Breakout-v4": [
+        210,
+        4
+    ],
+    "BreakoutDeterministic-v4": [
+        210,
+        4
+    ],
+    "BreakoutNoFrameskip-v4": [
+        210,
+        4
+    ],
+    "Breakout-ram-v4": [
+        128,
+        4
+    ],
+    "Breakout-ramDeterministic-v4": [
+        128,
+        4
+    ],
+    "Breakout-ramNoFrameskip-v4": [
+        128,
+        4
+    ],
+    "Carnival-v4": [
+        214,
+        6
+    ],
+    "CarnivalDeterministic-v4": [
+        214,
+        6
+    ],
+    "CarnivalNoFrameskip-v4": [
+        214,
+        6
+    ],
+    "Carnival-ram-v4": [
+        128,
+        6
+    ],
+    "Carnival-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "Carnival-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "Centipede-v4": [
+        210,
+        18
+    ],
+    "CentipedeDeterministic-v4": [
+        210,
+        18
+    ],
+    "CentipedeNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Centipede-ram-v4": [
+        128,
+        18
+    ],
+    "Centipede-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Centipede-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "ChopperCommand-v4": [
+        210,
+        18
+    ],
+    "ChopperCommandDeterministic-v4": [
+        210,
+        18
+    ],
+    "ChopperCommandNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "ChopperCommand-ram-v4": [
+        128,
+        18
+    ],
+    "ChopperCommand-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "ChopperCommand-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "CrazyClimber-v4": [
+        210,
+        9
+    ],
+    "CrazyClimberDeterministic-v4": [
+        210,
+        9
+    ],
+    "CrazyClimberNoFrameskip-v4": [
+        210,
+        9
+    ],
+    "CrazyClimber-ram-v4": [
+        128,
+        9
+    ],
+    "CrazyClimber-ramDeterministic-v4": [
+        128,
+        9
+    ],
+    "CrazyClimber-ramNoFrameskip-v4": [
+        128,
+        9
+    ],
+    "Defender-v4": [
+        210,
+        18
+    ],
+    "DefenderDeterministic-v4": [
+        210,
+        18
+    ],
+    "DefenderNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Defender-ram-v4": [
+        128,
+        18
+    ],
+    "Defender-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Defender-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "DemonAttack-v4": [
+        210,
+        6
+    ],
+    "DemonAttackDeterministic-v4": [
+        210,
+        6
+    ],
+    "DemonAttackNoFrameskip-v4": [
+        210,
+        6
+    ],
+    "DemonAttack-ram-v4": [
+        128,
+        6
+    ],
+    "DemonAttack-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "DemonAttack-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "DoubleDunk-v4": [
+        210,
+        18
+    ],
+    "DoubleDunkDeterministic-v4": [
+        210,
+        18
+    ],
+    "DoubleDunkNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "DoubleDunk-ram-v4": [
+        128,
+        18
+    ],
+    "DoubleDunk-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "DoubleDunk-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "ElevatorAction-v4": [
+        210,
+        18
+    ],
+    "ElevatorActionDeterministic-v4": [
+        210,
+        18
+    ],
+    "ElevatorActionNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "ElevatorAction-ram-v4": [
+        128,
+        18
+    ],
+    "ElevatorAction-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "ElevatorAction-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Enduro-v4": [
+        210,
+        9
+    ],
+    "EnduroDeterministic-v4": [
+        210,
+        9
+    ],
+    "EnduroNoFrameskip-v4": [
+        210,
+        9
+    ],
+    "Enduro-ram-v4": [
+        128,
+        9
+    ],
+    "Enduro-ramDeterministic-v4": [
+        128,
+        9
+    ],
+    "Enduro-ramNoFrameskip-v4": [
+        128,
+        9
+    ],
+    "FishingDerby-v4": [
+        210,
+        18
+    ],
+    "FishingDerbyDeterministic-v4": [
+        210,
+        18
+    ],
+    "FishingDerbyNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "FishingDerby-ram-v4": [
+        128,
+        18
+    ],
+    "FishingDerby-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "FishingDerby-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Freeway-v4": [
+        210,
+        3
+    ],
+    "FreewayDeterministic-v4": [
+        210,
+        3
+    ],
+    "FreewayNoFrameskip-v4": [
+        210,
+        3
+    ],
+    "Freeway-ram-v4": [
+        128,
+        3
+    ],
+    "Freeway-ramDeterministic-v4": [
+        128,
+        3
+    ],
+    "Freeway-ramNoFrameskip-v4": [
+        128,
+        3
+    ],
+    "Frostbite-v4": [
+        210,
+        18
+    ],
+    "FrostbiteDeterministic-v4": [
+        210,
+        18
+    ],
+    "FrostbiteNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Frostbite-ram-v4": [
+        128,
+        18
+    ],
+    "Frostbite-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Frostbite-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Gopher-v4": [
+        210,
+        8
+    ],
+    "GopherDeterministic-v4": [
+        210,
+        8
+    ],
+    "GopherNoFrameskip-v4": [
+        210,
+        8
+    ],
+    "Gopher-ram-v4": [
+        128,
+        8
+    ],
+    "Gopher-ramDeterministic-v4": [
+        128,
+        8
+    ],
+    "Gopher-ramNoFrameskip-v4": [
+        128,
+        8
+    ],
+    "Gravitar-v4": [
+        210,
+        18
+    ],
+    "GravitarDeterministic-v4": [
+        210,
+        18
+    ],
+    "GravitarNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Gravitar-ram-v4": [
+        128,
+        18
+    ],
+    "Gravitar-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Gravitar-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Hero-v4": [
+        210,
+        18
+    ],
+    "HeroDeterministic-v4": [
+        210,
+        18
+    ],
+    "HeroNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Hero-ram-v4": [
+        128,
+        18
+    ],
+    "Hero-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Hero-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "IceHockey-v4": [
+        210,
+        18
+    ],
+    "IceHockeyDeterministic-v4": [
+        210,
+        18
+    ],
+    "IceHockeyNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "IceHockey-ram-v4": [
+        128,
+        18
+    ],
+    "IceHockey-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "IceHockey-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Jamesbond-v4": [
+        210,
+        18
+    ],
+    "JamesbondDeterministic-v4": [
+        210,
+        18
+    ],
+    "JamesbondNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Jamesbond-ram-v4": [
+        128,
+        18
+    ],
+    "Jamesbond-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Jamesbond-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "JourneyEscape-v4": [
+        230,
+        16
+    ],
+    "JourneyEscapeDeterministic-v4": [
+        230,
+        16
+    ],
+    "JourneyEscapeNoFrameskip-v4": [
+        230,
+        16
+    ],
+    "JourneyEscape-ram-v4": [
+        128,
+        16
+    ],
+    "JourneyEscape-ramDeterministic-v4": [
+        128,
+        16
+    ],
+    "JourneyEscape-ramNoFrameskip-v4": [
+        128,
+        16
+    ],
+    "Kangaroo-v4": [
+        210,
+        18
+    ],
+    "KangarooDeterministic-v4": [
+        210,
+        18
+    ],
+    "KangarooNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Kangaroo-ram-v4": [
+        128,
+        18
+    ],
+    "Kangaroo-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Kangaroo-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Krull-v4": [
+        210,
+        18
+    ],
+    "KrullDeterministic-v4": [
+        210,
+        18
+    ],
+    "KrullNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Krull-ram-v4": [
+        128,
+        18
+    ],
+    "Krull-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Krull-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "KungFuMaster-v4": [
+        210,
+        14
+    ],
+    "KungFuMasterDeterministic-v4": [
+        210,
+        14
+    ],
+    "KungFuMasterNoFrameskip-v4": [
+        210,
+        14
+    ],
+    "KungFuMaster-ram-v4": [
+        128,
+        14
+    ],
+    "KungFuMaster-ramDeterministic-v4": [
+        128,
+        14
+    ],
+    "KungFuMaster-ramNoFrameskip-v4": [
+        128,
+        14
+    ],
+    "MontezumaRevenge-v4": [
+        210,
+        18
+    ],
+    "MontezumaRevengeDeterministic-v4": [
+        210,
+        18
+    ],
+    "MontezumaRevengeNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "MontezumaRevenge-ram-v4": [
+        128,
+        18
+    ],
+    "MontezumaRevenge-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "MontezumaRevenge-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "MsPacman-v4": [
+        210,
+        9
+    ],
+    "MsPacmanDeterministic-v4": [
+        210,
+        9
+    ],
+    "MsPacmanNoFrameskip-v4": [
+        210,
+        9
+    ],
+    "MsPacman-ram-v4": [
+        128,
+        9
+    ],
+    "MsPacman-ramDeterministic-v4": [
+        128,
+        9
+    ],
+    "MsPacman-ramNoFrameskip-v4": [
+        128,
+        9
+    ],
+    "NameThisGame-v4": [
+        210,
+        6
+    ],
+    "NameThisGameDeterministic-v4": [
+        210,
+        6
+    ],
+    "NameThisGameNoFrameskip-v4": [
+        210,
+        6
+    ],
+    "NameThisGame-ram-v4": [
+        128,
+        6
+    ],
+    "NameThisGame-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "NameThisGame-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "Phoenix-v4": [
+        210,
+        8
+    ],
+    "PhoenixDeterministic-v4": [
+        210,
+        8
+    ],
+    "PhoenixNoFrameskip-v4": [
+        210,
+        8
+    ],
+    "Phoenix-ram-v4": [
+        128,
+        8
+    ],
+    "Phoenix-ramDeterministic-v4": [
+        128,
+        8
+    ],
+    "Phoenix-ramNoFrameskip-v4": [
+        128,
+        8
+    ],
+    "Pitfall-v4": [
+        210,
+        18
+    ],
+    "PitfallDeterministic-v4": [
+        210,
+        18
+    ],
+    "PitfallNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Pitfall-ram-v4": [
+        128,
+        18
+    ],
+    "Pitfall-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Pitfall-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Pong-v4": [
+        210,
+        6
+    ],
+    "PongDeterministic-v4": [
+        210,
+        6
+    ],
+    "PongNoFrameskip-v4": [
+        210,
+        6
+    ],
+    "Pong-ram-v4": [
+        128,
+        6
+    ],
+    "Pong-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "Pong-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "Pooyan-v4": [
+        220,
+        6
+    ],
+    "PooyanDeterministic-v4": [
+        220,
+        6
+    ],
+    "PooyanNoFrameskip-v4": [
+        220,
+        6
+    ],
+    "Pooyan-ram-v4": [
+        128,
+        6
+    ],
+    "Pooyan-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "Pooyan-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "PrivateEye-v4": [
+        210,
+        18
+    ],
+    "PrivateEyeDeterministic-v4": [
+        210,
+        18
+    ],
+    "PrivateEyeNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "PrivateEye-ram-v4": [
+        128,
+        18
+    ],
+    "PrivateEye-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "PrivateEye-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Qbert-v4": [
+        210,
+        6
+    ],
+    "QbertDeterministic-v4": [
+        210,
+        6
+    ],
+    "QbertNoFrameskip-v4": [
+        210,
+        6
+    ],
+    "Qbert-ram-v4": [
+        128,
+        6
+    ],
+    "Qbert-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "Qbert-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "Riverraid-v4": [
+        210,
+        18
+    ],
+    "RiverraidDeterministic-v4": [
+        210,
+        18
+    ],
+    "RiverraidNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Riverraid-ram-v4": [
+        128,
+        18
+    ],
+    "Riverraid-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Riverraid-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "RoadRunner-v4": [
+        210,
+        18
+    ],
+    "RoadRunnerDeterministic-v4": [
+        210,
+        18
+    ],
+    "RoadRunnerNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "RoadRunner-ram-v4": [
+        128,
+        18
+    ],
+    "RoadRunner-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "RoadRunner-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Robotank-v4": [
+        210,
+        18
+    ],
+    "RobotankDeterministic-v4": [
+        210,
+        18
+    ],
+    "RobotankNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Robotank-ram-v4": [
+        128,
+        18
+    ],
+    "Robotank-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Robotank-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Seaquest-v4": [
+        210,
+        18
+    ],
+    "SeaquestDeterministic-v4": [
+        210,
+        18
+    ],
+    "SeaquestNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Seaquest-ram-v4": [
+        128,
+        18
+    ],
+    "Seaquest-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Seaquest-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Skiing-v4": [
+        210,
+        3
+    ],
+    "SkiingDeterministic-v4": [
+        210,
+        3
+    ],
+    "SkiingNoFrameskip-v4": [
+        210,
+        3
+    ],
+    "Skiing-ram-v4": [
+        128,
+        3
+    ],
+    "Skiing-ramDeterministic-v4": [
+        128,
+        3
+    ],
+    "Skiing-ramNoFrameskip-v4": [
+        128,
+        3
+    ],
+    "Solaris-v4": [
+        210,
+        18
+    ],
+    "SolarisDeterministic-v4": [
+        210,
+        18
+    ],
+    "SolarisNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Solaris-ram-v4": [
+        128,
+        18
+    ],
+    "Solaris-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Solaris-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "SpaceInvaders-v4": [
+        210,
+        6
+    ],
+    "SpaceInvadersDeterministic-v4": [
+        210,
+        6
+    ],
+    "SpaceInvadersNoFrameskip-v4": [
+        210,
+        6
+    ],
+    "SpaceInvaders-ram-v4": [
+        128,
+        6
+    ],
+    "SpaceInvaders-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "SpaceInvaders-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "StarGunner-v4": [
+        210,
+        18
+    ],
+    "StarGunnerDeterministic-v4": [
+        210,
+        18
+    ],
+    "StarGunnerNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "StarGunner-ram-v4": [
+        128,
+        18
+    ],
+    "StarGunner-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "StarGunner-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Tennis-v4": [
+        210,
+        18
+    ],
+    "TennisDeterministic-v4": [
+        210,
+        18
+    ],
+    "TennisNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Tennis-ram-v4": [
+        128,
+        18
+    ],
+    "Tennis-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Tennis-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "TimePilot-v4": [
+        210,
+        10
+    ],
+    "TimePilotDeterministic-v4": [
+        210,
+        10
+    ],
+    "TimePilotNoFrameskip-v4": [
+        210,
+        10
+    ],
+    "TimePilot-ram-v4": [
+        128,
+        10
+    ],
+    "TimePilot-ramDeterministic-v4": [
+        128,
+        10
+    ],
+    "TimePilot-ramNoFrameskip-v4": [
+        128,
+        10
+    ],
+    "Tutankham-v4": [
+        210,
+        8
+    ],
+    "TutankhamDeterministic-v4": [
+        210,
+        8
+    ],
+    "TutankhamNoFrameskip-v4": [
+        210,
+        8
+    ],
+    "Tutankham-ram-v4": [
+        128,
+        8
+    ],
+    "Tutankham-ramDeterministic-v4": [
+        128,
+        8
+    ],
+    "Tutankham-ramNoFrameskip-v4": [
+        128,
+        8
+    ],
+    "UpNDown-v4": [
+        210,
+        6
+    ],
+    "UpNDownDeterministic-v4": [
+        210,
+        6
+    ],
+    "UpNDownNoFrameskip-v4": [
+        210,
+        6
+    ],
+    "UpNDown-ram-v4": [
+        128,
+        6
+    ],
+    "UpNDown-ramDeterministic-v4": [
+        128,
+        6
+    ],
+    "UpNDown-ramNoFrameskip-v4": [
+        128,
+        6
+    ],
+    "Venture-v4": [
+        210,
+        18
+    ],
+    "VentureDeterministic-v4": [
+        210,
+        18
+    ],
+    "VentureNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Venture-ram-v4": [
+        128,
+        18
+    ],
+    "Venture-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Venture-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "VideoPinball-v4": [
+        210,
+        9
+    ],
+    "VideoPinballDeterministic-v4": [
+        210,
+        9
+    ],
+    "VideoPinballNoFrameskip-v4": [
+        210,
+        9
+    ],
+    "VideoPinball-ram-v4": [
+        128,
+        9
+    ],
+    "VideoPinball-ramDeterministic-v4": [
+        128,
+        9
+    ],
+    "VideoPinball-ramNoFrameskip-v4": [
+        128,
+        9
+    ],
+    "WizardOfWor-v4": [
+        210,
+        10
+    ],
+    "WizardOfWorDeterministic-v4": [
+        210,
+        10
+    ],
+    "WizardOfWorNoFrameskip-v4": [
+        210,
+        10
+    ],
+    "WizardOfWor-ram-v4": [
+        128,
+        10
+    ],
+    "WizardOfWor-ramDeterministic-v4": [
+        128,
+        10
+    ],
+    "WizardOfWor-ramNoFrameskip-v4": [
+        128,
+        10
+    ],
+    "YarsRevenge-v4": [
+        210,
+        18
+    ],
+    "YarsRevengeDeterministic-v4": [
+        210,
+        18
+    ],
+    "YarsRevengeNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "YarsRevenge-ram-v4": [
+        128,
+        18
+    ],
+    "YarsRevenge-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "YarsRevenge-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "Zaxxon-v4": [
+        210,
+        18
+    ],
+    "ZaxxonDeterministic-v4": [
+        210,
+        18
+    ],
+    "ZaxxonNoFrameskip-v4": [
+        210,
+        18
+    ],
+    "Zaxxon-ram-v4": [
+        128,
+        18
+    ],
+    "Zaxxon-ramDeterministic-v4": [
+        128,
+        18
+    ],
+    "Zaxxon-ramNoFrameskip-v4": [
+        128,
+        18
+    ],
+    "CartPole-v1": [
+        4,
+        2
+    ],
+    "MountainCar-v0": [
+        2,
+        3
+    ],
+    "Acrobot-v1": [
+        6,
+        3
+    ]
+}
