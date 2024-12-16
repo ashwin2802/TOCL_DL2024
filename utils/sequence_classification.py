@@ -100,3 +100,68 @@ class HGNaive(avalanche.training.Naive):
         mb_output = self.mb_output.view(-1, self.mb_output.size(-1))
         ll = self._criterion(mb_output, self.mb_y.view(-1))
         return ll
+    
+class HGICaRL(avalanche.training.ICaRL):
+    """There are only a couple of modifications needed to
+    use huggingface:
+    - we add a bunch of attributes corresponding to the batch items,
+        redefining mb_x and mb_y too
+    - _unpack_minibatch sends the dictionary values to the GPU device
+    - forward and criterion are adapted for machine translation tasks.
+    """
+
+    @property
+    def mb_attention_mask(self):
+        return self.mbatch["attention_mask"]
+
+    @property
+    def mb_x(self):
+        """Current mini-batch input."""
+        return self.mbatch["input_ids"]
+
+    @property
+    def mb_y(self):
+        """Current mini-batch target."""
+        return self.mbatch["labels"]
+
+    @property
+    def mb_decoder_in_ids(self):
+        """Current mini-batch target."""
+        return self.mbatch["decoder_input_ids"]
+
+    @property
+    def mb_token_type_ids(self):
+        return self.mbatch[3]
+
+    def _unpack_minibatch(self):
+        """HuggingFace minibatches are dictionaries of tensors.
+        Move tensors to the current device."""
+
+        from torch.nn.utils.rnn import pad_sequence
+        batched_input_ids = torch.stack(self.mbatch["input_ids"], dim=1) if not isinstance(self.mbatch["input_ids"], torch.Tensor) else self.mbatch["input_ids"]
+        batched_attention_mask = torch.stack(self.mbatch["attention_mask"], dim=1) if not isinstance(self.mbatch['attention_mask'], torch.Tensor) else self.mbatch['attention_mask']
+
+        device = self.model.feature_extractor.device
+        batched_input_ids = batched_input_ids.to(device)
+        batched_attention_mask = batched_attention_mask.to(device)
+        self.mbatch["labels"] = self.mbatch["labels"].to(device)
+
+        # print(f"self.mbatch.keys(): {self.mbatch.keys()}")
+        self.mbatch["attention_mask"] = batched_attention_mask
+        self.mbatch["input_ids"] = batched_input_ids
+
+    def forward(self):
+        print(f"self.mb_x: {self.mb_x}")
+        input = {'input_ids': self.mb_x, 'attention_mask': self.mb_attention_mask}
+        # out = self.model(
+        #     input_ids=self.mb_x,
+        #     attention_mask=self.mb_attention_mask,
+        #     labels=self.mb_y,
+        # )
+        out = self.model(input)
+        return out
+
+    def criterion(self):
+        mb_output = self.mb_output.view(-1, self.mb_output.size(-1))
+        ll = self._criterion(mb_output, self.mb_y.view(-1))
+        return ll

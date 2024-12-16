@@ -203,12 +203,12 @@ class AmazonReviewDataset:
         Returns:
         CLScenario: Incremental learning benchmark scenario.
         """
-        # from datasets.config import HF_DATASETS_CACHE
+        from datasets.config import HF_DATASETS_CACHE
         import os
 
         # Use default cache directory for Hugging Face datasets
-        # processed_dataset_path = os.path.join(HF_DATASETS_CACHE, "amazon_review_dataset")
-        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset")
+        processed_dataset_path = os.path.join(HF_DATASETS_CACHE, "amazon_review_dataset_2000")
+        # processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset")
 
         # Print the resolved path
         # print(f"Processed dataset will be saved in: {processed_dataset_path}")
@@ -298,12 +298,24 @@ class AmazonReviewDataset:
             test_exps.append(exp_test)
 
         # Create incremental benchmark scenario
-        return CLScenario(
+        # For every experience, reference the CLScenario itself
+        benchmark = CLScenario(
             [
                 CLStream("train", train_exps),
                 CLStream("test", test_exps),
             ]
-        ), len(train_exps)
+        )
+
+        benchmark.n_classes_per_exp = [1] * len(train_exps)
+        benchmark.classes_order = list(range(len(train_exps)))
+
+        for experience in benchmark.train_stream: 
+            experience.benchmark = benchmark
+
+        for experience in benchmark.test_stream:
+            experience.benchmark = benchmark
+
+        return benchmark, len(train_exps)
 
 
 # Example usage

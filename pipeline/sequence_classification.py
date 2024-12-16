@@ -18,7 +18,7 @@ from avalanche.evaluation.metrics import (
 )
 
 from utils.compute_metrics import *
-from utils.sequence_classification import HGNaive, CustomDataCollatorSeq2SeqBeta
+from utils.sequence_classification import HGNaive, HGICaRL, CustomDataCollatorSeq2SeqBeta
 from avalanche.training.supervised import Naive, Cumulative, ICaRL
 from avalanche.training.plugins import ReplayPlugin, EWCPlugin, GEMPlugin
 from avalanche.evaluation.metrics import (
@@ -28,6 +28,31 @@ from avalanche.evaluation.metrics import (
 )
 
 from utils.amazon_review import AmazonReviewDataset
+
+from transformers import BertModel, BertConfig
+import torch.nn as nn
+
+class CustomBertClassifier(nn.Module):
+    def __init__(self, model_name, num_labels=2, device=None):
+        super(CustomBertClassifier, self).__init__()
+        # Load the BERT encoder
+        self.bert = BertModel.from_pretrained(model_name)
+        
+        # Define a simple linear layer as the classification head
+        self.classifier = nn.Linear(self.bert.config.hidden_size, num_labels)
+        self.device = device
+    
+    def forward(self, input_ids, attention_mask=None, token_type_ids=None):
+        # Get the outputs from the BERT encoder
+        outputs = self.bert(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids)
+        
+        # Use the pooled output (corresponding to [CLS] token)
+        pooled_output = outputs.pooler_output
+        
+        # Pass through the linear classifier
+        logits = self.classifier(pooled_output)
+        
+        return logits  # Return logits directly as a tensor
 
 def main(args): 
     device = torch.device(
@@ -39,8 +64,11 @@ def main(args):
     if args['pretrained']: 
         model = BertForSequenceClassification.from_pretrained(args['model_name'], num_labels=2).to(device)
     else: 
-        config = BertConfig.from_pretrained(args['model_name'], num_labels=2)
-        model = BertForSequenceClassification(config).to(device)
+        # Instantiate the custom model
+        model = CustomBertClassifier(args['model_name'], num_labels=2, device=device).to(device)
+
+        # config = BertConfig.from_pretrained(args['model_name'], num_labels=2)
+        # model = BertForSequenceClassification(config).to(device)
         
     data_collator = CustomDataCollatorSeq2SeqBeta(tokenizer=tokenizer, model=model)
 
@@ -69,10 +97,10 @@ def main(args):
             evaluator=eval_plugin,
         )
     elif args['strategy'] == "naive-w-replay":
-        cl_strategy = HGNaive(
+        strategy = HGNaive(
             model,
             torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
-            CrossEntropyLoss(),
+            torch.nn.CrossEntropyLoss(),
             train_mb_size=args['train_mb_size'],
             train_epochs=args['train_epochs'],
             eval_mb_size=args['test_mb_size'],
@@ -82,10 +110,10 @@ def main(args):
         )
     elif args['strategy'] == "naive-w-ewc": 
         print(f"strategy: naive-w-ewc")
-        cl_strategy = HGNaive(
+        strategy = HGNaive(
             model,
             torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
-            CrossEntropyLoss(),
+            torch.nn.CrossEntropyLoss(),
             train_mb_size=args['train_mb_size'],
             train_epochs=args['train_epochs'],
             eval_mb_size=args['test_mb_size'],
@@ -95,10 +123,10 @@ def main(args):
         )
     elif args['strategy'] == "naive-w-gem": 
         print(f"strategy: naive-w-gem")
-        cl_strategy = HGNaive(
+        strategy = HGNaive(
             model,
             torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
-            CrossEntropyLoss(),
+            torch.nn.CrossEntropyLoss(),
             train_mb_size=args['train_mb_size'],
             train_epochs=args['train_epochs'],
             eval_mb_size=args['test_mb_size'],
@@ -113,16 +141,17 @@ def main(args):
         import copy
         import itertools
 
+        print(f"model: {model}")
         # Assuming model is a ResNet or similar model with a classification head
-        classification_head = copy.deepcopy(model.fc)  # Make a deep copy of the classification head
-        model.fc = torch.nn.Identity()
+        classification_head = copy.deepcopy(model.classifier)  # Make a deep copy of the classification head
+        model.classifier = torch.nn.Identity()
         # classification_head = torch.nn.Linear(in_features=64, out_features=100)
 
         # Combine parameters from feature_extractor and classification_head
         params = itertools.chain(model.parameters(), classification_head.parameters())
 
         print("stragety: icarl")
-        cl_strategy = ICaRL(
+        strategy = HGICaRL(
             model,
             classification_head,
             torch.optim.Adam(params, lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
@@ -138,10 +167,10 @@ def main(args):
         )
     elif args['strategy'] == "naive-w-gem": 
         print("strategy: naive-w-gem")
-        cl_strategy = Naive(
+        strategy = Naive(
             model,
             torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
-            CrossEntropyLoss(),
+            torch.nn.CrossEntropyLoss(),
             train_mb_size=args['train_mb_size'],
             train_epochs=args['train_epochs'],
             eval_mb_size=args['test_mb_size'],
