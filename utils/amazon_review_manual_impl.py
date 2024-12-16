@@ -196,7 +196,7 @@ class AmazonReviewDataset:
         import os
 
         # Use default cache directory for Hugging Face datasets
-        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset_2000")
+        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset")
 
         # Check if the preprocessed dataset already exists in the cache
         if os.path.exists(processed_dataset_path):

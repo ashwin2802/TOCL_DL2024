@@ -1,0 +1,17 @@
+{
+    "model_name": "bert-base-uncased", 
+    
+    "cache_dir": "/cluster/scratch/rrigoni/.cache/huggingface",
+    "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/amazon_review_{}_tasks_{}_{}_epochs_{}_alpha_{}.json",
+
+    "strategy": "icarl",
+    "num_samples_per_domain": 50000,
+    "domain_groups": "random-3", 
+    
+    "train_mb_size": 100, 
+    "test_mb_size": 100, 
+    "train_epochs": 20,
+
+    "alpha": 10.0
+
+}
