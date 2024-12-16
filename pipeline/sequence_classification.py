@@ -19,6 +19,13 @@ from avalanche.evaluation.metrics import (
 
 from utils.compute_metrics import *
 from utils.sequence_classification import HGNaive, CustomDataCollatorSeq2SeqBeta
+from avalanche.training.supervised import Naive, Cumulative, ICaRL
+from avalanche.training.plugins import ReplayPlugin, EWCPlugin, GEMPlugin
+from avalanche.evaluation.metrics import (
+    forgetting_metrics,
+    accuracy_metrics,
+    loss_metrics,
+)
 
 from utils.amazon_review import AmazonReviewDataset
 
@@ -61,6 +68,87 @@ def main(args):
             # plugins=[GEMPlugin(5120, 0.5)],
             evaluator=eval_plugin,
         )
+    elif args['strategy'] == "naive-w-replay":
+        cl_strategy = HGNaive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[ReplayPlugin(mem_size=5120)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "naive-w-ewc": 
+        print(f"strategy: naive-w-ewc")
+        cl_strategy = HGNaive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[EWCPlugin(ewc_lambda=10.0)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "naive-w-gem": 
+        print(f"strategy: naive-w-gem")
+        cl_strategy = HGNaive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[GEMPlugin(5120, 0.5)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "icarl": 
+        # Separate the feature extractor and the classification head
+        # feature_extractor = torch.nn.Sequential(*list(model.children())[:-1])  # Remove the last layer
+        # classification_head = model.fc if hasattr(model, 'fc') else model.output  # Get the classification head
+        import copy
+        import itertools
+
+        # Assuming model is a ResNet or similar model with a classification head
+        classification_head = copy.deepcopy(model.fc)  # Make a deep copy of the classification head
+        model.fc = torch.nn.Identity()
+        # classification_head = torch.nn.Linear(in_features=64, out_features=100)
+
+        # Combine parameters from feature_extractor and classification_head
+        params = itertools.chain(model.parameters(), classification_head.parameters())
+
+        print("stragety: icarl")
+        cl_strategy = ICaRL(
+            model,
+            classification_head,
+            torch.optim.Adam(params, lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            5120,
+            None,
+            True,
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            # plugins=[ReplayPlugin(mem_size=1000)],
+            evaluator=eval_plugin,
+        )
+    elif args['strategy'] == "naive-w-gem": 
+        print("strategy: naive-w-gem")
+        cl_strategy = Naive(
+            model,
+            torch.optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4),
+            CrossEntropyLoss(),
+            train_mb_size=args['train_mb_size'],
+            train_epochs=args['train_epochs'],
+            eval_mb_size=args['test_mb_size'],
+            device=device,
+            plugins=[GEMPlugin(5120, 0.5)],
+            evaluator=eval_plugin,
+        )
     else: 
         raise Exception(f"Unsupported strategy: {args['strategy']}")
     
@@ -83,7 +171,8 @@ def main(args):
     backward_transfer = compute_backward_transfer_matrix(accuracy_matrix)
 
     pretrained_key = 'pretrained' if args['pretrained'] else 'scratch'
-    file_path = args['res_file_template'].format(args['model_name'], pretrained_key, num_tasks, args['strategy'])
+    # for the model_name, consider only the name stem
+    file_path = args['res_file_template'].format(args['model_name'].split('/')[-1], pretrained_key, num_tasks, args['strategy'], args['train_epochs'])
     save_results_to_file(file_path, accuracy_matrix, average_accuracy, average_incremental_accuracy, forgetting_measure, backward_transfer)
         
     

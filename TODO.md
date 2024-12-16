@@ -30,3 +30,8 @@ Implement metric for groping at this point is more important.
 - The next step is implementing an actor that has multiple heads, one for each task label. 
 -> This seems to be a problem, and we need to test the implementation further. Change a dimension at a time, i.e., first the number of outputs, 
 -> then the inputs, because this might have impact on the model. 
+
+Sequence to Sequence: 
+- figure out the best training epochs for BertModel on the full dataset, to see which is the highest scores we can get. 
+- stick to this for the rest of the experiements
+- implement the other training stategies in the mean time

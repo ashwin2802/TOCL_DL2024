@@ -7,10 +7,10 @@
 
     "strategy": "naive",
     "num_samples_per_domain": 50000,
-    "domain_groups": "random-2", 
+    "domain_groups": "random-20", 
     
     "train_mb_size": 100, 
     "test_mb_size": 100, 
-    "train_epochs": 30
+    "train_epochs": 1
 
 }

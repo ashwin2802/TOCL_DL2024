@@ -5,7 +5,7 @@
     "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/Amazon_Review_{}_{}_tasks_{}_strategy_{}_epochs_{}.json",
     "pretrained": false,
 
-    "strategy": "naive",
+    "strategy": "naive-w-replay",
     "num_samples_per_domain": 50000,
     "domain_groups": "random-2", 
     

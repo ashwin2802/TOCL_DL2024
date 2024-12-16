@@ -208,7 +208,7 @@ class AmazonReviewDataset:
 
         # Use default cache directory for Hugging Face datasets
         # processed_dataset_path = os.path.join(HF_DATASETS_CACHE, "amazon_review_dataset")
-        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset_2000")
+        processed_dataset_path = os.path.join(self.cache_dir, "amazon_review_dataset")
 
         # Print the resolved path
         # print(f"Processed dataset will be saved in: {processed_dataset_path}")
@@ -229,7 +229,7 @@ class AmazonReviewDataset:
         # Preprocess dataset for sequence classification
         def preprocess_function(examples):
             # print(f"examples: {examples}")
-            inputs = self.tokenizer(examples["text"], max_length=256, truncation=True, padding=True)
+            inputs = self.tokenizer(examples["text"], max_length=256, truncation=True, padding="max_length")
             inputs["labels"] = examples["label"]
             # inputs["domain"] = examples["domain"]
             return inputs
