@@ -1,0 +1,19 @@
+{
+    "accuracy_matrix": [
+        [
+            0.31119999289512634
+        ]
+    ],
+    "average_accuracy": [
+        0.31119999289512634
+    ],
+    "average_incremental_accuracy": [
+        0.31119999289512634
+    ],
+    "forgetting_measure": [
+        0.0
+    ],
+    "backward_transfer": [
+        0.0
+    ]
+}

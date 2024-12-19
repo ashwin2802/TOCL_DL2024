@@ -36,3 +36,23 @@ Sequence to Sequence:
 - which are the experiments and the dimensions to even investigate? 
 
 - find the best mixing coefficient for the iCaRL famework
+
+## Problem that the forgetting matrix is just diagonal...
+Change the model architecture and make it task-aware, i.e., the classification head dynamically changes depending on the task being used.
+This implies that the task labels are known in advance. 
+
+
+## Testing best epochs for resnet-18
+Find the best number of epochs for the resnet-18. Fix this for all other experiemnts. 
+-> Trying with 500 epochs, and decreasing learning rate
+-> Change learning rate
+-> Try increasing/decreasing the batch size
+
+## Leave it at that!
+We tried enough and it doesn't matter that we show a score for competitive models. 
+Instead, we just focus on minimizing forgetting. 
+
+-> Fix some final configuration and submit the array of jobs!
+Batch_size: 50
+lr: 1e-4
+

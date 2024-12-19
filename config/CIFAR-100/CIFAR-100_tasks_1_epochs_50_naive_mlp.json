@@ -1,0 +1,13 @@
+{
+    "data_dir" : "/cluster/scratch/rrigoni/dl_project/CIFAR-100",
+    "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/CIFAR-100_{}_epochs_{}_tasks_{}_strategy_{}.json",
+    
+    "train_mb_size": 100, 
+    "test_mb_size": 100, 
+    "train_epochs": 50,
+
+    "strategy" : "naive",
+
+    "model_name" : "simpleMLP-3072-256-4-100",  
+    "num_tasks": 1
+}
