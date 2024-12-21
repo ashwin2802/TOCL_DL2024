@@ -1,0 +1,13 @@
+{
+    "data_dir" : "/cluster/scratch/rrigoni/dl_project/CIFAR-100",
+    "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/CIFAR-100_{}_epochs_{}_classes_per_task_{}_strategy_{}.json",
+    
+    "train_mb_size": 50, 
+    "test_mb_size": 50, 
+    "train_epochs": 30,
+    "classes_per_task": 10,
+
+    "strategy" : "naive",
+
+    "model_name" : "task_aware_resnet-18-{}-{}"
+}

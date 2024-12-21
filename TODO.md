@@ -37,22 +37,8 @@ Sequence to Sequence:
 
 - find the best mixing coefficient for the iCaRL famework
 
-## Problem that the forgetting matrix is just diagonal...
-Change the model architecture and make it task-aware, i.e., the classification head dynamically changes depending on the task being used.
-This implies that the task labels are known in advance. 
+## Cambdridge Paper Task Similarity
+We are running a script that computes the similarity matrix for all 100 tasks. 
+We are running a script that computes the similarity matrix for all 100 tasks, and normalizes the scores by the g_k squared L2 norm.
 
-
-## Testing best epochs for resnet-18
-Find the best number of epochs for the resnet-18. Fix this for all other experiemnts. 
--> Trying with 500 epochs, and decreasing learning rate
--> Change learning rate
--> Try increasing/decreasing the batch size
-
-## Leave it at that!
-We tried enough and it doesn't matter that we show a score for competitive models. 
-Instead, we just focus on minimizing forgetting. 
-
--> Fix some final configuration and submit the array of jobs!
-Batch_size: 50
-lr: 1e-4
-
+We then use such partitioning for running the continual learning algorithms.

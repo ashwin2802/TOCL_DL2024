@@ -1,14 +1,14 @@
 {
     "accuracy_matrix": [
         [
-            0.31119999289512634
+            0.6837000250816345
         ]
     ],
     "average_accuracy": [
-        0.31119999289512634
+        0.6837000250816345
     ],
     "average_incremental_accuracy": [
-        0.31119999289512634
+        0.6837000250816345
     ],
     "forgetting_measure": [
         0.0

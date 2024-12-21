@@ -12,7 +12,6 @@ def compute_accuracy_matrix(results: dict, num_tasks: int):
             if key.startswith('Top1_Acc_Exp'): 
                 task_results_polished[key] = value
 
-        print(f"task_results_polished: {task_results_polished}")
         task_keys_polished = sorted(task_results_polished.keys(), key=lambda k: int(k.split("/")[-1][-3:]))  # Sort keys by task index
         
         for j, key in enumerate(task_keys_polished):
@@ -92,6 +91,40 @@ def save_results_to_file(file_path, accuracy_matrix, average_accuracy, average_i
         "average_incremental_accuracy": average_incremental_accuracy.tolist() if average_incremental_accuracy.dim() > 0 else average_incremental_accuracy.item(),
         "forgetting_measure": forgetting_measure.tolist() if forgetting_measure.dim() > 0 else forgetting_measure.item(),
         "backward_transfer": backward_transfer.tolist() if backward_transfer.dim() > 0 else backward_transfer.item()
+    }
+
+    # Save results to the specified file in JSON format
+    with open(file_path, 'w') as f:
+        json.dump(results, f, indent=4)
+
+    print(f"Results successfully saved to {file_path}")
+
+# Assuming args.res_file is the file path where results will be saved
+def save_ci_results_to_file(file_path, 
+    average_accuracy_mean, average_accuracy_std,
+    average_incremental_accuracy_mean, average_incremental_accuracy_std,
+    forgetting_measure_mean, forgetting_measure_std, 
+    backward_transfer_mean, backward_transfer_std):
+    """
+    Save results to a JSON file instead of printing.
+
+    Parameters:
+    - file_path: Path to save the results.
+    - average_accuracy_{mean/std}: PyTorch 1D tensor or scalar tensor.
+    - average_incremental_accuracy_{mean/std}: PyTorch 1D tensor or scalar tensor.
+    - forgetting_measure_{mean/std}: PyTorch 1D tensor or scalar tensor.
+    - backward_transfer_{mean/std}: PyTorch 1D tensor or scalar tensor.
+    """
+    # Convert tensors to Python-native types
+    results = {
+        "average_accuracy_mean": average_accuracy_mean.tolist() if average_accuracy_mean.dim() > 0 else average_accuracy_mean.item(),
+        "average_accuracy_std": average_accuracy_std.tolist() if average_accuracy_std.dim() > 0 else average_accuracy_std.item(),
+        "average_incremental_accuracy_mean": average_incremental_accuracy_mean.tolist() if average_incremental_accuracy_mean.dim() > 0 else average_incremental_accuracy_mean.item(),
+        "average_incremental_accuracy_std": average_incremental_accuracy_std.tolist() if average_incremental_accuracy_std.dim() > 0 else average_incremental_accuracy_std.item(),
+        "forgetting_measure_mean": forgetting_measure_mean.tolist() if forgetting_measure_mean.dim() > 0 else forgetting_measure_mean.item(),
+        "forgetting_measure_std": forgetting_measure_std.tolist() if forgetting_measure_std.dim() > 0 else forgetting_measure_std.item(),
+        "backward_transfer_mean": backward_transfer_mean.tolist() if backward_transfer_mean.dim() > 0 else backward_transfer_mean.item(),
+        "backward_transfer_std": backward_transfer_std.tolist() if backward_transfer_std.dim() > 0 else backward_transfer_std.item()
     }
 
     # Save results to the specified file in JSON format
