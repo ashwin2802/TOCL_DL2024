@@ -1,0 +1,50 @@
+{
+    "average_accuracy_mean": [
+        79.5999984741211,
+        64.89999389648438,
+        62.0,
+        51.150001525878906
+    ],
+    "average_accuracy_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "average_incremental_accuracy_mean": [
+        79.5999984741211,
+        72.25,
+        68.83333587646484,
+        64.4124984741211
+    ],
+    "average_incremental_accuracy_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "forgetting_measure_mean": [
+        0.0,
+        29.0,
+        28.09999656677246,
+        42.599998474121094
+    ],
+    "forgetting_measure_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ],
+    "backward_transfer_mean": [
+        0.0,
+        -29.0,
+        -28.09999656677246,
+        -42.599998474121094
+    ],
+    "backward_transfer_std": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+    ]
+}

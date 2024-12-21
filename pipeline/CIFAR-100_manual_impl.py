@@ -145,9 +145,10 @@ def main(args):
         results = []
 
         # randomly shuffle the task_groups -> isolate the effect of task grouping and not ordering
-        if args['path_to_task_groups'] is not None:
+        if args['path_to_task_groups'] is not None and args['shuffle_task_groups']:
             random.shuffle(task_groups) 
-        else: 
+
+        if args['path_to_task_groups'] is None:
             random.shuffle(all_classes)
             task_groups = [all_classes[i : min(i + classes_per_task, len(all_classes))] for i in range(0, len(all_classes), classes_per_task)]
 
@@ -199,24 +200,44 @@ def main(args):
         ci_results["backward_transfer"].append(backward_transfer)
 
     metrics_stats = {}
+    # Assuming ci_results["average_accuracy"] is a list of tensors
+    # Extract the last element of each tensor and create a new tensor
+    last_elements = torch.tensor([t[-1].item() for t in ci_results["average_accuracy"]])
+
+    # Alternatively, if you want to avoid converting to Python scalar (.item())
+    last_elements = torch.stack([t[-1] for t in ci_results["average_accuracy"]])
+
+    # Assign to metrics_stats
+    metrics_stats["average_final_accuracy"] = last_elements
+
     for metric_name, values in ci_results.items():
         # metric_tensor = torch.tensor(values)
         # Stack the list of tensors into a single tensor
         metric_tensor = torch.stack(values)  # This assumes all tensors have the same shape
 
         metrics_stats[f"{metric_name}_mean"] = torch.mean(metric_tensor, dim=0)  # Mean across iterations
-        metrics_stats[f"{metric_name}_std"] = torch.std(metric_tensor, dim=0)    # Std across iterations
-        print(f"{metric_name}: {values}")
-        print(f"{metric_name}_mean: {metrics_stats[f'{metric_name}_mean']}")
+        if args['ci_iterations'] > 1: 
+            metrics_stats[f"{metric_name}_std"] = torch.std(metric_tensor, dim=0)    # Std across iterations
+        # print(f"{metric_name}: {values}")
+        # print(f"{metric_name}_mean: {metrics_stats[f'{metric_name}_mean']}")
 
     # Save aggregated results
-    file_path = args['res_file_template'].format(args['model_name'].format(classes_per_task, num_tasks), args['classes_per_task'], args['similarity_metric'], args['grouping'], args['train_epochs'])
+    file_path = args['res_file_template'].format(args['model_name'].format(classes_per_task, num_tasks), args['classes_per_task'], args['similarity_metric'], args['grouping'], args['ordering'], args['train_epochs'])
+
+    if args['ci_iterations'] == 1: 
+        # Set std tensors to zeros with the same shape as the corresponding mean tensors
+        metrics_stats["average_accuracy_std"] = torch.zeros_like(torch.tensor(metrics_stats["average_accuracy_mean"]))
+        metrics_stats["average_incremental_accuracy_std"] = torch.zeros_like(torch.tensor(metrics_stats["average_incremental_accuracy_mean"]))
+        metrics_stats["forgetting_measure_std"] = torch.zeros_like(torch.tensor(metrics_stats["forgetting_measure_mean"]))
+        metrics_stats["backward_transfer_std"] = torch.zeros_like(torch.tensor(metrics_stats["backward_transfer_mean"]))
+        
     save_ci_results_to_file(
         file_path,
         metrics_stats["average_accuracy_mean"], metrics_stats["average_accuracy_std"],
         metrics_stats["average_incremental_accuracy_mean"], metrics_stats["average_incremental_accuracy_std"],
         metrics_stats["forgetting_measure_mean"], metrics_stats["forgetting_measure_std"],
-        metrics_stats["backward_transfer_mean"], metrics_stats["backward_transfer_std"]
+        metrics_stats["backward_transfer_mean"], metrics_stats["backward_transfer_std"],
+        metrics_stats["average_final_accuracy"]
     )
 
     print(f"Final aggregated results saved to {file_path}")

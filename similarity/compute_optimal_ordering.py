@@ -1,9 +1,10 @@
 import json
 import itertools
 import numpy as np
+import random
 
 # Load task grouping and similarity matrix
-path_to_task_grouping_file = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/greedy_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
+path_to_task_grouping_file = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/stochastic_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
 path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
 
 with open(path_to_task_grouping_file, 'r') as f: 
@@ -37,7 +38,6 @@ for perm in itertools.permutations(task_grouping):
         best_permutation = perm
 
 # Print the result
-print(f"Best permutation (minimizing the sum of similarity values): {best_permutation}")
-print(f"Task Grouping: {task_grouping}")
-print(f"Minimum cost: {min_cost}")
-
+path_to_optimal_ordering = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/min_cut_random_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
+with open(path_to_optimal_ordering, 'w') as f: 
+    json.dump(best_permutation, f)

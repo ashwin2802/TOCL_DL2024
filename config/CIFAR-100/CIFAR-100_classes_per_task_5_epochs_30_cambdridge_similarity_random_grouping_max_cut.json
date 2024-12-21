@@ -7,15 +7,15 @@
     "train_epochs": 30,
     "classes_per_task": 5,
     "num_classes": 20,
-    "shuffle_task_groups": true, 
+    "shuffle_task_groups": false, 
 
-    "path_to_task_groups": "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/greedy_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json",
+    "path_to_task_groups": "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/max_cut_random_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json",
 
     "similarity_metric" : "cambridge",
-    "grouping" : "greedy",
-    "ordering" : null,
+    "grouping" : "random",
+    "ordering" : "max_cut", 
 
-    "ci_iterations": 10,
+    "ci_iterations": 1,
 
     "model_name" : "task_aware_resnet-18-{}-{}"
 }

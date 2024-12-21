@@ -31,7 +31,9 @@ class ExperimentVisualizer:
         for file in self.results_folder.glob(f"{self.task_id}*.json"):
             with open(file, "r") as f:
                 experiment_data = json.load(f)
-                self.experiments[file.stem] = experiment_data
+                # Remove the task_id prefix from the file stem for the legend
+                experiment_name = file.stem.replace(self.task_id + "_", "")
+                self.experiments[experiment_name] = experiment_data
 
     def save_combined_plots(self):
         """
@@ -75,7 +77,7 @@ class ExperimentVisualizer:
 # Example Usage
 if __name__ == "__main__":
     # Initialize visualizer with a task ID
-    task_id = "CIFAR-100"  # Replace with your actual task ID
+    task_id = "CIFAR-100_task_aware_resnet-18-5-4_classes_per_task_5"  # Replace with your actual task ID
     visualizer = ExperimentVisualizer(task_id=task_id, results_folder="results/", plots_folder="plots/")
 
     # Save combined plots

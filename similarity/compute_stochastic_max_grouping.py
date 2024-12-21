@@ -70,7 +70,7 @@ path_to_final_partition = f"/cluster/home/rrigoni/TOCL_DL2024/similarity_matrice
 print(f"saving to: {path_to_final_partition}")
 with open(path_to_similarity_matrix, 'r') as f: 
     similarity_matrix = json.load(f)
-
+    
 num_classes = len(similarity_matrix)
 classes_per_task = 5
 num_samples = int(1e7)
