@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List
 from models.resnet import resnet
 from models.task_aware_resnet import task_aware_resnet
 from models.vgg import vgg
@@ -13,7 +13,8 @@ class ModuleLoader:
             "resnet": self._load_resnet,
             "task_aware_resnet": self._load_task_aware_resnet,
             "vgg": self._load_vgg,
-            "simpleMLP": self._load_simpleMLP
+            "simpleMLP": self._load_simpleMLP,
+            "task_aware_simpleMLP": self._load_task_aware_simpleMLP
             # Add additional models here if needed
         }
 
@@ -186,4 +187,76 @@ class ModuleLoader:
                 return x
 
         return SimpleMLP(input_dim=input_dim, hidden_dim=hidden_dim, num_hidden_layers=num_hidden_layers, num_classes=num_classes)
+
+    def _load_task_aware_simpleMLP(self, parts: List[str]) -> Any:
+        """
+        Loads a task-aware MLP model with a multi-headed classification head, 
+        where the `forward` method uses a task_label to select the appropriate head.
+
+        Parameters:
+            parts (list): The parts of the model keyword (e.g., ["task_mlp", "3072", "256", "3", "100,3"], where:
+                - "3072" is the input dimension
+                - "256" is the hidden dimension
+                - "3" is the number of hidden layers
+                - "100" is the number of classes per task (output dimension)
+                - "3" is the number of tasks (number of heads)
+
+        Returns:
+            nn.Module: The instantiated task-aware MLP model.
+
+        Raises:
+            ValueError: If the ID format is invalid or missing required parameters.
+        """
+        if len(parts) != 6 or not all(p.isdigit() for p in parts[1:]):
+            raise ValueError(
+                f"Invalid task-aware MLP ID format. Expected 'task_mlp-<input_dim>-<hidden_dim>-<num_hidden_layers>-<classes_per_task>-<num_tasks>', got: {'-'.join(parts)}"
+            )
+
+        input_dim = int(parts[1])
+        hidden_dim = int(parts[2])
+        num_hidden_layers = int(parts[3])
+        classes_per_task = int(parts[4])
+        num_tasks = int(parts[5])
+
+        class TaskAwareMLP(nn.Module):
+            def __init__(self, input_dim, hidden_dim, num_hidden_layers, classes_per_task, num_tasks):
+                super(TaskAwareMLP, self).__init__()
+                self.flatten = nn.Flatten()
+
+                # Dynamically create hidden layers
+                layers = [nn.Linear(input_dim, hidden_dim), nn.ReLU()]
+                for _ in range(num_hidden_layers - 1):
+                    layers.extend([nn.Linear(hidden_dim, hidden_dim), nn.ReLU()])
+
+                self.hidden_layers = nn.Sequential(*layers)
+
+                # Create classification heads, one for each task
+                self.task_heads = nn.ModuleList([nn.Linear(hidden_dim, classes_per_task) for _ in range(num_tasks)])
+
+            def forward(self, x, task_label: int):
+                """
+                Forward pass for the model. Selects the appropriate head based on the task_label.
+
+                Parameters:
+                    x (torch.Tensor): Input tensor of shape (batch_size, input_dim).
+                    task_label (int): The label of the task (0-indexed) to select the corresponding head.
+
+                Returns:
+                    torch.Tensor: The output of the selected classification head.
+                """
+                if task_label < 0 or task_label >= len(self.task_heads):
+                    raise ValueError(f"Invalid task_label {task_label}. Must be between 0 and {len(self.task_heads) - 1}.")
+
+                x = self.flatten(x)
+                x = self.hidden_layers(x)
+                x = self.task_heads[task_label](x)  # Use the head corresponding to the task_label
+                return x
+
+        return TaskAwareMLP(
+            input_dim=input_dim,
+            hidden_dim=hidden_dim,
+            num_hidden_layers=num_hidden_layers,
+            classes_per_task=classes_per_task,
+            num_tasks=num_tasks
+        )
 

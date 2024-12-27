@@ -37,8 +37,9 @@ Sequence to Sequence:
 
 - find the best mixing coefficient for the iCaRL famework
 
-## Cambdridge Paper Task Similarity
-We are running a script that computes the similarity matrix for all 100 tasks. 
-We are running a script that computes the similarity matrix for all 100 tasks, and normalizes the scores by the g_k squared L2 norm.
-
-We then use such partitioning for running the continual learning algorithms.
+# Run Experiments on MNIST
+-> Computing the similarity scores
+-> Run 10 ci_iterations, with random grouping and random ordering -> baseline
+-> Run 10 ci_iterations with best grouping and random ordering -> isolate the impact of using the metric
+-> Run 10 ci_iterations with best grouping and optimal ordering
+-> Compute the optimal grouping, and measure the impact of ordering only

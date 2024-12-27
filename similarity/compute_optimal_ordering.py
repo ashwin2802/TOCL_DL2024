@@ -4,8 +4,8 @@ import numpy as np
 import random
 
 # Load task grouping and similarity matrix
-path_to_task_grouping_file = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/stochastic_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
-path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
+path_to_task_grouping_file = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/optimal_partition_MNIST-10_cambdridge_similarity_with_grad_prod_task_aware_simpleMLP-784-256-3-2-10_epochs_10.json"
+path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/MNIST-10_cambdridge_similarity_with_grad_prod_task_aware_simpleMLP-784-256-3-2-10_epochs_10.json"
 
 with open(path_to_task_grouping_file, 'r') as f: 
     task_grouping = json.load(f)  # List of lists, where each inner list contains class indices for a task group
@@ -38,6 +38,6 @@ for perm in itertools.permutations(task_grouping):
         best_permutation = perm
 
 # Print the result
-path_to_optimal_ordering = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/min_cut_random_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
+path_to_optimal_ordering = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/min_cut_optimal_partition_MNIST-10_cambdridge_similarity_with_grad_product_task_aware_simpleMLP-784-256-3-2-10_epochs_10_with_normalization.json"
 with open(path_to_optimal_ordering, 'w') as f: 
     json.dump(best_permutation, f)

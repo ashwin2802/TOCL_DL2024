@@ -1,0 +1,10 @@
+{
+    "data_dir" : "/cluster/scratch/rrigoni/dl_project/MNIST-10",
+    "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/MNIST-10_cambdridge_similarity_with_grad_prod_{}_epochs_{}.json",
+    
+    "train_mb_size": 100, 
+    "test_mb_size": 100, 
+    "train_epochs": 10,
+
+    "model_name" : "task_aware_simpleMLP-784-256-3-{}-{}" 
+}

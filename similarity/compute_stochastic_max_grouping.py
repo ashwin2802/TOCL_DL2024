@@ -63,9 +63,9 @@ def compute_max_partition_sum(M, num_classes, classes_per_task, num_samples):
     return max_sum, max_partition
 
 # Paths and file handling
-path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_without_normalization.json"
+path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/MNIST-10_cambdridge_similarity_task_aware_simpleMLP-784-256-3-2-10_epochs_10.json"
 similarity_matrix_stem_name = path_to_similarity_matrix.split('/')[-1].split('.')[0]
-path_to_final_partition = f"/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/stochastic_partition_{similarity_matrix_stem_name}.json"
+path_to_final_partition = f"/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/optimal_partition_{similarity_matrix_stem_name}.json"
 
 print(f"saving to: {path_to_final_partition}")
 with open(path_to_similarity_matrix, 'r') as f: 
