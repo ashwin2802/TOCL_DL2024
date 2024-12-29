@@ -45,7 +45,7 @@ class ExperimentVisualizer:
 
         # Find all metric keys from the first experiment
         sample_experiment = next(iter(self.experiments.values()))
-        metric_keys = [key for key in sample_experiment.keys() if key != "accuracy_matrix"]
+        metric_keys = [key for key in sample_experiment.keys() if key != "accuracy_matrix" or key != "average_final_accuracy"]
 
         # Prepare the plot
         num_metrics = len(metric_keys)
@@ -77,7 +77,7 @@ class ExperimentVisualizer:
 # Example Usage
 if __name__ == "__main__":
     # Initialize visualizer with a task ID
-    task_id = "CIFAR-100_task_aware_resnet-18-5-4_classes_per_task_5"  # Replace with your actual task ID
+    task_id = "MNIST-10_task_aware_simpleMLP-784-256-3-2-5_classes_per_task_2"  # Replace with your actual task ID
     visualizer = ExperimentVisualizer(task_id=task_id, results_folder="results/", plots_folder="plots/")
 
     # Save combined plots

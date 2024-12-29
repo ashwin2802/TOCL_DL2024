@@ -37,9 +37,34 @@ Sequence to Sequence:
 
 - find the best mixing coefficient for the iCaRL famework
 
-# Run Experiments on MNIST
--> Computing the similarity scores
--> Run 10 ci_iterations, with random grouping and random ordering -> baseline
--> Run 10 ci_iterations with best grouping and random ordering -> isolate the impact of using the metric
--> Run 10 ci_iterations with best grouping and optimal ordering
--> Compute the optimal grouping, and measure the impact of ordering only
+-> Add the cumulative max and cumulative min grouping, and submit the experiments for it. 
+
+# Experiments of MNIST
+We compared metrics: 
+- cambridge 
+- cambridge w/ grad prod
+
+We compared grouping strategies: 
+- min/max intergroup heterogeneity
+
+We compared ordering strategies: 
+- min/max ordering:
+- min/max cumulative ordering
+
+Our baseline is no grouping and no ordering (~80%)
+We first assess whether the grouping has an impact on the final average accuracy.
+
+Grouping by the cambridge metric: 
+- optimal grouping: ~83%
+- optimal grouping & min ordering: 85%
+- optimal grouping & min cum ordering: 88%
+- optimal grouping & max ordering: 85%
+- optimal grouping & max ordering: 89.65%
+
+Grouping by the cambrdge metric and gradient product:
+- optimal grouping: ~89.6% -> statistical significance
+- optimal grouping & min ordering: 87.36%
+- optimal grouping & min cum ordering: 85%
+- optimal grouping & max ordering: 83%
+- optimal grouping & max ordering: 84%
+

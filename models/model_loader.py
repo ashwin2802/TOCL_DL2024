@@ -1,6 +1,8 @@
 from typing import Any, List
 from models.resnet import resnet
+from models.resnet_mnist import resnet_mnist
 from models.task_aware_resnet import task_aware_resnet
+from models.task_aware_resnet_mnist import task_aware_resnet_mnist
 from models.vgg import vgg
 import torch.nn as nn
 
@@ -12,6 +14,7 @@ class ModuleLoader:
         self.supported_models = {
             "resnet": self._load_resnet,
             "task_aware_resnet": self._load_task_aware_resnet,
+            "task_aware_resnet_mnist": self._load_task_aware_resnet_mnist,
             "vgg": self._load_vgg,
             "simpleMLP": self._load_simpleMLP,
             "task_aware_simpleMLP": self._load_task_aware_simpleMLP
@@ -81,6 +84,41 @@ class ModuleLoader:
         # Load the task-aware ResNet
         return task_aware_resnet(depth=depth, num_tasks=num_tasks, num_classes_per_task=num_classes_per_task)
 
+    def _load_task_aware_resnet_mnist(self, parts: list) -> Any:
+        """
+        Loads a Task-Aware ResNet model adapted for MNIST based on its ID.
+
+        Parameters:
+            parts (list): The parts of the model keyword (e.g., ["resnet", "18", "10", "1"], where:
+                - "18" is the depth of the ResNet
+                - "10" is the number of classes per task (default for MNIST is 10)
+                - "1" is the number of tasks (default for MNIST is a single task)
+
+        Returns:
+            nn.Module: The instantiated Task-Aware ResNet model.
+
+        Raises:
+            ValueError: If the ID format is invalid or depth is not supported.
+        """
+        # Ensure the parts contain sufficient information
+        if len(parts) != 4:
+            raise ValueError(f"Invalid ResNet ID format. Expected 'resnet-<depth>-<classes_per_task>-<num_tasks>', got: {'-'.join(parts)}")
+
+        # Parse parameters from the parts
+        try:
+            depth = int(parts[1])  # Depth of the ResNet
+            num_classes_per_task = int(parts[2])  # Number of classes per task (default is 10 for MNIST)
+            num_tasks = int(parts[3])  # Number of tasks (default is 1 for MNIST)
+        except ValueError:
+            raise ValueError(f"Invalid ResNet ID format. Parameters must be integers: 'resnet-<depth>-<classes_per_task>-<num_tasks>'.")
+
+        # Validate the depth
+        supported_depths = [18, 34, 50, 101, 152]  # Supported ResNet depths
+        if depth not in supported_depths:
+            raise ValueError(f"Unsupported ResNet depth '{depth}'. Supported depths: {supported_depths}")
+
+        # Load the task-aware ResNet for MNIST
+        return task_aware_resnet_mnist(depth=depth, num_tasks=num_tasks, num_classes_per_task=num_classes_per_task)
 
     def _load_resnet(self, parts: list) -> Any:
         """

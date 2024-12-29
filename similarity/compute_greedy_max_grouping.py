@@ -100,7 +100,7 @@ def compute_partition_sum_greedy_with_limit(M, num_classes, classes_per_task):
     return total_sum, partitions
 
 # Paths and file handling
-path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_without_normalization.json"
+path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-10_cambdridge_similarity_task_aware_simpleMLP-3072-256-3-2-10_epochs_10.json"
 similarity_matrix_stem_name = path_to_similarity_matrix.split('/')[-1].split('.')[0]
 path_to_final_partition = f"/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/greedy_partition_{similarity_matrix_stem_name}.json"
 
