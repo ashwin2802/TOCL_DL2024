@@ -50,10 +50,10 @@ def remap_labels(dataset, task_classes):
 def validation(model, task_groups, test_dataset, args, device): 
     results = []
     # Validate on all tasks seen so far
-    print(f"\nValidating on all tasks...")
+    print(f"\nValidating on all tasks...", flush=True)
     model.eval()
     for eval_task_id, eval_task_classes in enumerate(task_groups):
-        print(f"eval_task_id: {eval_task_id}, eval_task_classes: {eval_task_classes}")
+        print(f"eval_task_id: {eval_task_id}, eval_task_classes: {eval_task_classes}", flush=True)
         eval_test_dataset = remap_labels(test_dataset, eval_task_classes)
         print(f"len(eval_test_dataset): {len(eval_test_dataset)}")
         eval_loader = DataLoader(eval_test_dataset, batch_size=args['test_mb_size'], shuffle=False)
@@ -69,7 +69,7 @@ def validation(model, task_groups, test_dataset, args, device):
                 correct += (predicted == labels).sum().item()
 
         accuracy = 100 * correct / total
-        print(f"Task {eval_task_id + 1} Test Accuracy: {accuracy:.2f}%")
+        print(f"Task {eval_task_id + 1} Test Accuracy: {accuracy:.2f}%", flush=True)
         results.append(accuracy)
 
     return results
@@ -100,8 +100,10 @@ def main(args):
     if args['path_to_task_groups'] is not None:
         with open(args['path_to_task_groups'], 'r') as f: 
             task_groups = json.load(f)
+
+        task_groups = task_groups[str(classes_per_task)]
     else: 
-        num_classes = args.get('num_classes', 100)
+        num_classes = args.get('num_classes', 50)
         all_classes = list(range(num_classes))
 
         random.shuffle(all_classes)
@@ -109,7 +111,7 @@ def main(args):
         task_groups = [all_classes[i : min(i + classes_per_task, len(all_classes))] for i in range(0, len(all_classes), classes_per_task)]
     
     num_tasks = len(task_groups)
-    print(f"num_tasks: {num_tasks}, task_groups: {task_groups}")
+    print(f"num_tasks: {num_tasks}, task_groups: {task_groups}", flush=True)
 
     # Count samples per class in the dataset
     class_counts = Counter(test_dataset.targets)
@@ -121,7 +123,7 @@ def main(args):
         task_group_counts[f"Task {task_id + 1}"] = task_count
 
     # Print results
-    print("\nNumber of samples per task group:")
+    print("\nNumber of samples per task group:", flush=True)
     for task, count in task_group_counts.items():
         print(f"{task}: {count}")
 
@@ -141,7 +143,7 @@ def main(args):
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=0.0001, betas=(0.9, 0.999), weight_decay=1e-4)
 
-        print(f"ci_iteration: {ci_iteration + 1}/{args['ci_iterations']}")
+        print(f"ci_iteration: {ci_iteration + 1}/{args['ci_iterations']}", flush=True)
         results = []
 
         # randomly shuffle the task_groups -> isolate the effect of task grouping and not ordering
@@ -153,11 +155,11 @@ def main(args):
             task_groups = [all_classes[i : min(i + classes_per_task, len(all_classes))] for i in range(0, len(all_classes), classes_per_task)]
 
         for task_id, task_classes in enumerate(task_groups):
-            print(f"\nTraining on Task {task_id + 1}/{num_tasks} with classes {task_classes}")
+            print(f"\nTraining on Task {task_id + 1}/{num_tasks} with classes {task_classes}", flush=True)
 
             # Remap train and test datasets for the current task
             task_train_dataset = remap_labels(train_dataset, task_classes)
-            print(f"len(task_train_dataset): {len(task_train_dataset)}")
+            print(f"len(task_train_dataset): {len(task_train_dataset)}", flush=True)
 
             train_loader = DataLoader(task_train_dataset, batch_size=args['train_mb_size'], shuffle=True)
 
@@ -175,7 +177,7 @@ def main(args):
                     loss.backward()
                     optimizer.step()
                     running_loss += loss.item()
-                print(f"Epoch {epoch + 1}/{args['train_epochs']}, Loss: {running_loss / len(train_loader)}")
+                print(f"Epoch {epoch + 1}/{args['train_epochs']}, Loss: {running_loss / len(train_loader)}", flush=True)
 
             validation_scores = validation(model, task_groups, test_dataset, args, device)
             validation_scores_dict = {}
@@ -183,7 +185,7 @@ def main(args):
             for idx, score in enumerate(validation_scores): 
                 validation_scores_dict[template.format(idx)] = score
 
-            print(f"validation_scores_dict: {validation_scores_dict}")
+            print(f"validation_scores_dict: {validation_scores_dict}", flush=True)
             results.append(validation_scores_dict)
 
         # Compute metrics for this iteration
@@ -240,7 +242,7 @@ def main(args):
         metrics_stats["average_final_accuracy"]
     )
 
-    print(f"Final aggregated results saved to {file_path}")
+    print(f"Final aggregated results saved to {file_path}", flush=True)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

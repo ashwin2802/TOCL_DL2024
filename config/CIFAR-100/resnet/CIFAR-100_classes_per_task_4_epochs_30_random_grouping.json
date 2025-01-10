@@ -4,9 +4,9 @@
     
     "train_mb_size": 100, 
     "test_mb_size": 100, 
-    "train_epochs": 20,
-    "classes_per_task": 2,
-    "num_classes": 10,
+    "train_epochs": 30,
+    "classes_per_task": 4,
+    "num_classes": 50,
     "shuffle_task_groups": true, 
 
     "path_to_task_groups": null,
@@ -17,5 +17,5 @@
 
     "ci_iterations": 10,
 
-    "model_name" : "task_aware_simpleMLP-3072-256-3-{}-{}" 
+    "model_name" : "task_aware_resnet-18-{}-{}" 
 }

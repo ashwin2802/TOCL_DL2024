@@ -59,7 +59,7 @@ Grouping by the cambridge metric:
 - optimal grouping & min ordering: 85%
 - optimal grouping & min cum ordering: 88%
 - optimal grouping & max ordering: 85%
-- optimal grouping & max ordering: 89.65%
+- optimal grouping & max cum ordering: 89.65%
 
 Grouping by the cambrdge metric and gradient product:
 - optimal grouping: ~89.6% -> statistical significance
@@ -67,4 +67,8 @@ Grouping by the cambrdge metric and gradient product:
 - optimal grouping & min cum ordering: 85%
 - optimal grouping & max ordering: 83%
 - optimal grouping & max ordering: 84%
+
+# Repeat experiments on CIFAR-100
+We have already the similarity matrix being computed for CIFAR-100 with 20 and 100 classes, so we first implement the 
+LP max partitioning solution.
 
