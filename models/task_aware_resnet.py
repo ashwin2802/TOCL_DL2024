@@ -136,6 +136,30 @@ class TaskAwareResNet(nn.Module):
 
         return x
 
+    def forward_feature_extraction(self, x):
+        """
+        Forward pass through the ResNet with task awareness.
+
+        Parameters:
+            x (Tensor): Input tensor.
+
+        Returns:
+            Tensor: The output logits for the specified task.
+        """
+
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.relu(x)
+
+        x = self.layer1(x)
+        x = self.layer2(x)
+        x = self.layer3(x)
+        x = self.layer4(x)
+
+        x = self.avgpool(x)
+        x = torch.flatten(x, 1)
+        
+        return x
 
 def task_aware_resnet(depth, num_tasks=1, num_classes_per_task=100):
     """

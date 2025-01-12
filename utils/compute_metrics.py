@@ -104,7 +104,8 @@ def save_ci_results_to_file(file_path,
     average_accuracy_mean, average_accuracy_std,
     average_incremental_accuracy_mean, average_incremental_accuracy_std,
     forgetting_measure_mean, forgetting_measure_std, 
-    backward_transfer_mean, backward_transfer_std, average_final_accuracy):
+    backward_transfer_mean, backward_transfer_std, average_final_accuracy,
+    intermediate_representations = None):
     """
     Save results to a JSON file instead of printing.
 
@@ -125,9 +126,14 @@ def save_ci_results_to_file(file_path,
         "forgetting_measure_std": forgetting_measure_std.tolist() if forgetting_measure_std.dim() > 0 else forgetting_measure_std.item(),
         "backward_transfer_mean": backward_transfer_mean.tolist() if backward_transfer_mean.dim() > 0 else backward_transfer_mean.item(),
         "backward_transfer_std": backward_transfer_std.tolist() if backward_transfer_std.dim() > 0 else backward_transfer_std.item(),
-        "average_final_accuracy": average_final_accuracy.tolist() if average_final_accuracy.dim() > 0 else average_final_accuracy.item()
+        "average_final_accuracy": average_final_accuracy.tolist() if average_final_accuracy.dim() > 0 else average_final_accuracy.item(),         
     }
 
+    if intermediate_representations is not None: 
+        results.update({
+            "intermediate_representations": [representation.tolist() for iteration in intermediate_representations for representation in iteration]
+        })
+        
     # Save results to the specified file in JSON format
     with open(file_path, 'w') as f:
         json.dump(results, f, indent=4)

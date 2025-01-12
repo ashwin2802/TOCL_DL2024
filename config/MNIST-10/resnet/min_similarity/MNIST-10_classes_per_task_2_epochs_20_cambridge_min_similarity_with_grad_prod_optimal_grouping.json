@@ -1,0 +1,21 @@
+{
+    "data_dir" : "/cluster/scratch/rrigoni/dl_project/MNIST-10",
+    "res_file_template" : "/cluster/home/rrigoni/TOCL_DL2024/results/MNIST-10_{}_classes_per_task_{}_similarity_{}_grouping_{}_ordering_{}_epochs_{}.json",
+    
+    "train_mb_size": 100, 
+    "test_mb_size": 100, 
+    "train_epochs": 20,
+    "classes_per_task": 2,
+    "num_classes": 10,
+    "shuffle_task_groups": true, 
+
+    "path_to_task_groups": "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/optimal_min_partition_MNIST-10_cambdridge_similarity_with_grad_prod_task_aware_resnet_mnist-18-2-10_epochs_10.json",
+
+    "similarity_metric" : "min_cambridge_w_grad_prod",
+    "grouping" : "optimal",
+    "ordering" : "random", 
+
+    "ci_iterations": 10,
+
+    "model_name" : "task_aware_resnet_mnist-18-{}-{}" 
+}

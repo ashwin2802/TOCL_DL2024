@@ -44,7 +44,7 @@ def compute_max_partition_sum_exact(M, num_classes, classes_per_task):
     return max_sum, [list(group) for group in max_partition]
 
 # Paths and file handling
-path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/MNIST-10_cambdridge_similarity_task_aware_resnet_mnist-18-2-10_epochs_10_old.json"
+path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/MNIST-10_cambdridge_similarity_task_aware_resnet_mnist-18-2-10_epochs_10.json"
 similarity_matrix_stem_name = path_to_similarity_matrix.split('/')[-1].split('.')[0]
 path_to_final_partition = f"/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/optimal_partition_{similarity_matrix_stem_name}.json"
 

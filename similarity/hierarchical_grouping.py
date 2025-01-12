@@ -131,7 +131,7 @@ def hierarchical_clustering(similarity_matrix):
     return leaf_clusters, hierarchy
 
 if __name__ == "__main__":
-    path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-100_epochs_10.json"
+    path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-100_cambdridge_similarity_with_grad_prod_task_aware_resnet-18-2-50_epochs_10.json"
     with open(path_to_similarity_matrix, 'r') as f: 
         similarity_matrix = json.load(f)
     
@@ -149,6 +149,6 @@ if __name__ == "__main__":
         print(f"Cluster size {level}: {clusters}")
 
     # Save hierarchy to a JSON file
-    output_path = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/hierarchical_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
+    output_path = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/hierarchical_partition_CIFAR-100_cambdridge_similarity_with_grad_prod_task_aware_resnet-18-2-50_epochs_10_with_normalization.json"
     with open(output_path, "w") as f:
         json.dump(hierarchy, f, indent=4)

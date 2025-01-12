@@ -290,6 +290,22 @@ class ModuleLoader:
                 x = self.task_heads[task_label](x)  # Use the head corresponding to the task_label
                 return x
 
+            def forward_feature_extraction(self, x):
+                """
+                Forward pass for the model. Selects the appropriate head based on the task_label.
+
+                Parameters:
+                    x (torch.Tensor): Input tensor of shape (batch_size, input_dim).
+
+                Returns:
+                    torch.Tensor: The output of the selected classification head.
+                """
+
+                x = self.flatten(x)
+                x = self.hidden_layers(x)
+                
+                return x
+
         return TaskAwareMLP(
             input_dim=input_dim,
             hidden_dim=hidden_dim,

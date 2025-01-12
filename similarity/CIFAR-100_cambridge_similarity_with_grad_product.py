@@ -249,7 +249,7 @@ def main(args):
     train_dataset = datasets.CIFAR100(root=args['data_dir'], train=True, download=True, transform=train_transform)
     test_dataset = datasets.CIFAR100(root=args['data_dir'], train=False, download=True, transform=test_transform)
 
-    num_classes = 100
+    num_classes = 50
     task_groups = [[i] for i in range(num_classes)]
     num_tasks = len(task_groups)
     print(f"num_tasks: {num_tasks}, task_groups: {task_groups}")
