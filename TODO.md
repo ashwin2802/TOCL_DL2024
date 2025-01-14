@@ -72,3 +72,29 @@ Grouping by the cambrdge metric and gradient product:
 We have already the similarity matrix being computed for CIFAR-100 with 20 and 100 classes, so we first implement the 
 LP max partitioning solution.
 
+
+# Study the Correlation
+Let H_i \in R^{m, d}, where m is the number of tasks, and d is the input dimension to the classification heads.
+We compute H_i after having learn task i by encoding all test images with the feature extractor, and averaging the obtained hidden representation.
+
+Collecting such matrices over ci_iterations and over all experiences, we obtain a list of [ci_iteration, num_tasks, num_tasks, d]. 
+
+The description of the metrics can be made as mathematical as desired. 
+
+-> trajectory
+Linear regression plot saved to: ./plots/CIFAR-100/linear_regression_forgetting_vs_trajectory_lengths_plot.png
+Linear regression coefficients: [-7.59405529]
+Intercept: 420.63385072139044
+Correlation Coefficients: {'pearson_corr': -0.6448634710770506, 'pearson_p_value': 2.894433514152444e-05, 'spearman_corr': 0.006162464985994398, 'spearman_p_value': 0.9719729955454363}
+
+-> kl_divergence
+Linear regression plot saved to: ./plots/CIFAR-100/linear_regression_forgetting_vs_kl_divergence_plot.png
+Linear regression coefficients: [-0.00142392]
+Intercept: 0.127542934533363
+Correlation Coefficients: {'pearson_corr': -0.5100603618120908, 'pearson_p_value': 0.001747067648841618, 'spearman_corr': -0.19579831932773112, 'spearman_p_value': 0.25963964840942105}
+
+-> variance
+Linear regression plot saved to: ./plots/CIFAR-100/linear_regression_forgetting_vs_variance_plot.png
+Linear regression coefficients: [-0.07757147]
+Intercept: 8.772092142301178
+Correlation Coefficients: {'pearson_corr': -0.470176940982578, 'pearson_p_value': 0.003808753376598711, 'spearman_corr': -0.09858429858429861, 'spearman_p_value': 0.5673037310972122}

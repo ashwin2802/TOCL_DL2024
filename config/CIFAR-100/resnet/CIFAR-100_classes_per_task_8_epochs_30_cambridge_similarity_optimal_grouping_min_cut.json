@@ -7,7 +7,7 @@
     "train_epochs": 30,
     "classes_per_task": 8,
     "num_classes": 50,
-    "shuffle_task_groups": true, 
+    "shuffle_task_groups": false, 
 
     "path_to_task_groups": "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/min_cut_optimal_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet_mnist-18-2-10_epochs_10_with_normalization.json",
 
@@ -15,7 +15,7 @@
     "grouping" : "optimal",
     "ordering" : "min_cut", 
 
-    "ci_iterations": 10,
+    "ci_iterations": 5,
 
     "model_name" : "task_aware_resnet-18-{}-{}" 
 }

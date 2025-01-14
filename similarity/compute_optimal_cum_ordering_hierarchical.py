@@ -6,7 +6,7 @@ from tqdm import tqdm
 
 # Load task grouping and similarity matrix
 path_to_similarity_matrix = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-100_epochs_10.json"
-path_to_task_grouping_file = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/hierarchical_partition_CIFAR-100_cambdridge_similarity_with_grad_prod_task_aware_resnet-18-2-50_epochs_10_with_normalization.json"
+path_to_task_grouping_file = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/hierarchical_min_partition_CIFAR-100_cambdridge_similarity_task_aware_resnet-18-2-20_epochs_10_with_normalization.json"
 
 with open(path_to_similarity_matrix, 'r') as f: 
     similarity_matrix = np.array(json.load(f))  # Convert the list of lists to a NumPy array
@@ -37,20 +37,20 @@ for key, value in task_grouping.items():
     if key == '2' or key == '4': 
         continue
     # Find the permutation that minimizes the cost
-    min_cost = float('inf')
+    max_cost = -1 * float('inf')
     best_permutation = None
 
     # Iterate over all permutations of task groups
     for perm in tqdm(itertools.permutations(value)):
         cost = compute_cost(perm, value, similarity_matrix)
-        if cost < min_cost:
-            min_cost = cost
+        if cost > max_cost:
+            max_cost = cost
             best_permutation = perm
 
     optimal_ordering[key] = best_permutation
 
 # Print the result
-path_to_optimal_ordering = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/min_cum_cut_optimal_partition_CIFAR-100_cambdridge_similarity_with_grad_prod_task_aware_resnet-18-2-50_epochs_10_with_normalization.json"
+path_to_optimal_ordering = "/cluster/home/rrigoni/TOCL_DL2024/similarity_matrices/max_cum_cut_optimal_partition_CIFAR-100_cambdridge_min_similarity_task_aware_resnet-18-2-50_epochs_10_with_normalization.json"
 with open(path_to_optimal_ordering, 'w') as f: 
     json.dump(optimal_ordering, f)
 
