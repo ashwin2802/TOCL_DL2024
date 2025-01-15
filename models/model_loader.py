@@ -15,9 +15,10 @@ class ModuleLoader:
             "resnet": self._load_resnet,
             "task_aware_resnet": self._load_task_aware_resnet,
             "task_aware_resnet_mnist": self._load_task_aware_resnet_mnist,
-            "vgg": self._load_vgg,
+            
             "simpleMLP": self._load_simpleMLP,
             "task_aware_simpleMLP": self._load_task_aware_simpleMLP
+
             # Add additional models here if needed
         }
 

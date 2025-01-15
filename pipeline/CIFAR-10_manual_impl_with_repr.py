@@ -24,7 +24,7 @@ from models.model_loader import ModuleLoader
 def main(args): 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    train_dataset, test_dataset = get_dataset('cifar-100')
+    train_dataset, test_dataset = get_dataset('cifar-10')
     classes_per_task = args['classes_per_task']  # Number of classes per task
 
     ci_results = {
@@ -41,26 +41,16 @@ def main(args):
             with open(args['path_to_task_groups'], 'r') as f: 
                 task_groups = json.load(f)
 
-            task_groups = task_groups[str(classes_per_task)]
-
             if args['shuffle_task_groups']: 
                 random.shuffle(task_groups)
         else: 
             # If no path_to_task_groups is provided, then random classes_per_task-subsets are created
-            num_classes = args.get('num_classes', 50)
+            num_classes = args.get('num_classes', 10)
             all_classes = list(range(num_classes))
 
             random.shuffle(all_classes)
 
             task_groups = [all_classes[i : min(i + classes_per_task, len(all_classes))] for i in range(0, len(all_classes), classes_per_task)]
-
-            # Since we use only 50 classes, 2 classes are vacant for classes_per_task in [4, 8, 16], which are filtered out here
-            max_cluster_size = max([len(task_classes) for task_classes in task_groups])
-            if max_cluster_size > 2: 
-                # filters out the cluster with only two classes
-                task_groups = [task_classes for task_classes in task_groups if len(task_classes) > 2]
-
-                print(f"filtered task_gruops: {task_groups}", flush=True)
             
         num_tasks = len(task_groups)
         print(f"num_tasks: {num_tasks}, task_groups: {task_groups}", flush=True)
@@ -130,6 +120,19 @@ def main(args):
         ci_results["average_incremental_accuracy"].append(average_incremental_accuracy)
         ci_results["forgetting_measure"].append(forgetting_measure)
         ci_results["backward_transfer"].append(backward_transfer)
+
+    # Compute metrics for this iteration
+        accuracy_matrix = compute_accuracy_matrix(results, num_tasks)
+        average_accuracy = compute_average_accuracy_matrix(accuracy_matrix)
+        average_incremental_accuracy = compute_average_incremental_accuracy_matrix(average_accuracy)
+        forgetting_measure = compute_forgetting_matrix(accuracy_matrix)
+        backward_transfer = compute_backward_transfer_matrix(accuracy_matrix)
+
+        # Collect metrics for this iteration
+        ci_results["average_accuracy"].append(average_accuracy)
+        ci_results["average_incremental_accuracy"].append(average_incremental_accuracy)
+        ci_results["forgetting_measure"].append(forgetting_measure)
+        ci_results["backward_transfer"].append(backward_transfer)
         ci_results["intermediate_representations"].append(curr_iteration_intermediate_representations)
 
     metrics_stats = {}
@@ -167,6 +170,7 @@ def main(args):
     )
 
     print(f"Final aggregated results saved to {file_path}", flush=True)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

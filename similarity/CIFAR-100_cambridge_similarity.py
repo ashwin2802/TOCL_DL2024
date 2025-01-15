@@ -18,36 +18,10 @@ import argparse
 from utils.compute_metrics import *
 from torch.autograd import grad
 
-# Define the task-aware ResNet model
+from common import *
+from pipeline.common import *
+
 from models.model_loader import ModuleLoader
-
-def get_non_task_head_parameters(model):
-    """
-    Filter out the parameters associated with `self.task_heads`.
-    """
-    return [p for name, p in model.named_parameters() if "task_heads" not in name]
-
-def hessian_vector_product(loss, model, vector):
-    # Get the non-task-head parameters
-    non_task_head_params = get_non_task_head_parameters(model)
-
-    # Compute first-order gradients
-    grads = grad(loss, non_task_head_params, create_graph=True)
-
-    # Split the vector into the same shapes as the non-task-head parameters
-    vector_split = []
-    pointer = 0
-    for param in non_task_head_params:
-        num_param = param.numel()
-        vector_split.append(vector[pointer:pointer + num_param].reshape_as(param))
-        pointer += num_param
-
-    # Compute Hessian-vector product
-    grads_vector = grad(
-        grads, non_task_head_params, grad_outputs=vector_split, retain_graph=True
-    )
-    # Flatten the resulting gradients
-    return torch.cat([g.reshape(-1) for g in grads_vector])
 
 def compute_curvature(model, Tj_loader, Tk_loader, criterion, device, task_label_j, task_label_k):
     # Get the non-task-head parameters
@@ -117,119 +91,17 @@ def validation_with_gradients(model, task_groups, test_dataset, args, device, cr
 
     return results
 
-def remap_labels(dataset, task_classes):
-    """
-    Remap the labels in a deep copy of the dataset to fit within the range [0, classes_per_task-1].
-
-    Parameters:
-        dataset (Dataset): The dataset to remap labels for.
-        task_classes (list): List of class labels for the current task.
-
-    Returns:
-        Subset: A subset of the copied dataset with labels remapped to the range [0, classes_per_task-1].
-    """
-    # Create a deep copy of the dataset
-    dataset_copy = deepcopy(dataset)
-
-    # Create a mapping from the original labels to new labels
-    class_mapping = {original: new for new, original in enumerate(task_classes)}
-
-    # Create a list of indices and remap the labels in the copied dataset
-    indices = []
-    for i, (image, label) in enumerate(dataset_copy):
-        if label in class_mapping:
-            indices.append(i)
-            dataset_copy.targets[i] = class_mapping[label]  # Update the label in the copy
-
-    # Return the subset of the copied dataset with remapped labels
-    return Subset(dataset_copy, indices)
-
-def generate_random_images(batch_size, image_shape):
-    """
-    Generate a batch of random images with the given shape.
-    """
-    return torch.rand(batch_size, *image_shape)
-
-# Training loop with batch augmentation
-def train_model_with_augmentation(model, train_loader, optimizer, criterion, device, args, task_id):
-    """
-    Train the model with augmented batches (original + random images with label 1).
-    """
-    model.train()
-    for epoch in range(args['train_epochs']):
-        running_loss = 0.0
-        for images, labels in tqdm(train_loader):
-            # Move data to the appropriate device
-            images, labels = images.to(device), labels.to(device)
-            
-            # Generate random images and assign label 1
-            random_images = generate_random_images(images.size(0), images.shape[1:]).to(device)
-            random_labels = torch.ones(images.size(0), dtype=torch.long).to(device)
-
-            # Augment the batch
-            augmented_images = torch.cat((images, random_images), dim=0)
-            augmented_labels = torch.cat((labels, random_labels), dim=0)
-
-            # Zero the parameter gradients
-            optimizer.zero_grad()
-
-            # Forward pass
-            outputs = model(augmented_images, task_label=task_id)
-
-            # Compute loss
-            loss = criterion(outputs, augmented_labels)
-
-            # Backward pass and optimization
-            loss.backward()
-            optimizer.step()
-
-            # Accumulate loss
-            running_loss += loss.item()
-
-        # Print epoch statistics
-        print(f"Epoch {epoch + 1}/{args['train_epochs']}, Loss: {running_loss / len(train_loader)}")
-    
 def main(args): 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     classes_per_task = 2 # 0 -> real images, 1 -> random noise
 
-    # Transforms
-    train_transform = transforms.Compose([
-        transforms.RandomCrop(32, padding=4),           # Random crop
-        transforms.RandomHorizontalFlip(),              # Horizontal flip
-        transforms.RandomRotation(15),                 # Random rotation
-        transforms.ToTensor(),                         # Convert to tensor
-        transforms.Normalize((0.491, 0.482, 0.446), (0.247, 0.243, 0.261)),  # Normalize
-    ])
-
-    test_transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.491, 0.482, 0.446), (0.247, 0.243, 0.261))
-    ])
-
-    train_dataset = datasets.CIFAR100(root=args['data_dir'], train=True, download=True, transform=train_transform)
-    test_dataset = datasets.CIFAR100(root=args['data_dir'], train=False, download=True, transform=test_transform)
-
-    num_classes = 100
+    train_dataset, test_dataset = get_dataset('cifar-100')
+    
+    num_classes = 50
     task_groups = [[i] for i in range(num_classes)]
     num_tasks = len(task_groups)
     print(f"num_tasks: {num_tasks}, task_groups: {task_groups}")
-
-    # Count samples per class in the dataset
-    class_counts = Counter(test_dataset.targets)
-
-    # Aggregate counts based on task groups
-    task_group_counts = {}
-    for task_id, task_classes in enumerate(task_groups):
-        task_count = sum(class_counts[class_label] for class_label in task_classes)
-        task_group_counts[f"Task {task_id + 1}"] = task_count
-
-    # Print results
-    print("\nNumber of samples per task group:")
-    for task, count in task_group_counts.items():
-        print(f"{task}: {count}")
-
 
     results = []
     for task_id, task_classes in enumerate(task_groups):
