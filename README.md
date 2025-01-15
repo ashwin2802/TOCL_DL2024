@@ -2,15 +2,15 @@
 
 This repository contains the code for the Deep Learning HS2024 project **"How to Order your Tasks: Investigating Task Sequencing in Continual Learning"**.
 
-## Reproducing Experiments
-
-To reproduce the experiments, create the Conda virtual environment using the `environment.yml` file.
-
 **Note:**
 - In the code, the term **"Cambridge similarity"** refers to the curvature-based task similarity.
 - The term **"Cambridge similarity with gradient product"** refers to the curvature-based task similarity augmented with the gradient inner product score, as described in the report.
 
 ---
+
+## Reproducing Experiments
+
+To reproduce the experiments, create the Conda virtual environment using the `environment.yml` file.
 
 ### Similarity Matrix Computation
 
