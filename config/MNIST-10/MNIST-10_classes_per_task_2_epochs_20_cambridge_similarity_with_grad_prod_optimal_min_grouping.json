@@ -8,7 +8,7 @@
     "num_classes": 10,
     "shuffle_task_groups": true, 
 
-    "path_to_task_groups": "path/to/MNIST-10/min/hierarchical/task/grouping/file.json",
+    "path_to_task_groups": "path/to/MNIST-10/max/similarity/hierarchical/task/grouping/file.json",
 
     "similarity_metric" : "cambridge_w_grad_prod",
     "grouping" : "min_optimal",

@@ -8,7 +8,7 @@
     "num_classes": 50,
     "shuffle_task_groups": false, 
 
-    "path_to_task_groups": "path/to/CIFAR-100/min/cut/max/hierarchical/ordering/file.json",
+    "path_to_task_groups": "path/to/CIFAR-100/min/cut/max/similarity/hierarchical/grouping/with/min/cut/ordering/file.json",
 
     "similarity_metric" : "cambridge_w_grad_prod",
     "grouping" : "max_hierarchical",
