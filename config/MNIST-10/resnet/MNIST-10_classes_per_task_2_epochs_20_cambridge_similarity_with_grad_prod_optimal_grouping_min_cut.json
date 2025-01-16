@@ -15,7 +15,7 @@
     "grouping" : "optimal",
     "ordering" : "min_cut", 
 
-    "ci_iterations": 1,
+    "ci_iterations": 5,
 
     "model_name" : "task_aware_resnet_mnist-18-{}-{}" 
 }

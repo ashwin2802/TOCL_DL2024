@@ -145,14 +145,10 @@ class TaskAwareResNetMNIST(nn.Module):
 
         Parameters:
             x (Tensor): Input tensor.
-            task_label (int): The task label indicating which classification head to use.
 
         Returns:
             Tensor: The output logits for the specified task.
         """
-        if task_label >= self.num_tasks:
-            raise ValueError(f"Invalid task_label {task_label}. Must be in range [0, {self.num_tasks - 1}].")
-
         x = self.conv1(x)
         x = self.bn1(x)
         x = self.relu(x)
