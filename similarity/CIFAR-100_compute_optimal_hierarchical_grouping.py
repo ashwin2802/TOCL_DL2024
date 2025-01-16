@@ -5,7 +5,7 @@ from tqdm import tqdm
 import time
 import json
 
-def minimize_pairwise_similarity(similarity_matrix):
+def maximize_pairwise_similarity(similarity_matrix):
     n = len(similarity_matrix)  # Number of elements
 
     # Decision variables: x[i][j] is binary, indicating whether task i is in subset j
@@ -46,7 +46,7 @@ def minimize_pairwise_similarity(similarity_matrix):
     else:
         raise ValueError("No optimal solution found.")
 
-def maximize_pairwise_similarity(similarity_matrix):
+def minimize_pairwise_similarity(similarity_matrix):
     n = len(similarity_matrix)  # Number of elements
 
     # Decision variables: x[i][j] is binary, indicating whether task i is in subset j

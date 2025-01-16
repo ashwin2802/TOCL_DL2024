@@ -3,9 +3,9 @@ import numpy as np
 import json
 from tqdm import tqdm
 
-def compute_min_partition_sum_exact(M, num_classes, classes_per_task):
+def compute_max_partition_sum_exact(M, num_classes, classes_per_task):
     """
-    Compute the maximum sum of M[i, j] across all possible partitions of num_classes into groups of size classes_per_task.
+    Compute the minimum (dissimilarity) sum of M[i, j] across all possible partitions of num_classes into groups of size classes_per_task.
 
     Args:
         M (np.ndarray): A square matrix of size [num_classes, num_classes].
@@ -13,7 +13,7 @@ def compute_min_partition_sum_exact(M, num_classes, classes_per_task):
         classes_per_task (int): Number of classes per task in the partition.
 
     Returns:
-        float: The maximum sum across all possible partitions.
+        float: The minimum (dissimilarity) sum across all possible partitions.
         list of lists: The optimal partition.
     """
     # Generate all possible partitions
@@ -43,9 +43,9 @@ def compute_min_partition_sum_exact(M, num_classes, classes_per_task):
 
     return min_sum, [list(group) for group in min_partition]
 
-def compute_max_partition_sum_exact(M, num_classes, classes_per_task):
+def compute_min_partition_sum_exact(M, num_classes, classes_per_task):
     """
-    Compute the maximum sum of M[i, j] across all possible partitions of num_classes into groups of size classes_per_task.
+    Compute the maximum (dissimilarity) sum of M[i, j] across all possible partitions of num_classes into groups of size classes_per_task.
 
     Args:
         M (np.ndarray): A square matrix of size [num_classes, num_classes].

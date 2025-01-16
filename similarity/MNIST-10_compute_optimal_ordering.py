@@ -55,17 +55,30 @@ if __name__ == "__main__":
     ]:
         print(f"Processing mode: {mode}")
 
+        """
+        IMPORTANT: 
+        min and max refer to minimizing and maximizing similarity, respectively. 
+        As larger values in the similarity matrix represent higher DISsimilarity, 
+        the inequalities for the best_cost computation are swapped.  
+        """
         if "min" in mode:
-            best_cost = float("inf")
-        else:
             best_cost = -float("inf")
+        else:
+            best_cost = float("inf")
 
         best_permutation = None
 
         # Iterate over all permutations of task groups
         for perm in tqdm(itertools.permutations(task_grouping)):
             cost = cost_function(perm, task_grouping, similarity_matrix)
-            if ("min" in mode and cost < best_cost) or ("max" in mode and cost > best_cost):
+            
+            """
+            IMPORTANT: 
+            min and max refer to minimizing and maximizing similarity, respectively. 
+            As larger values in the similarity matrix represent higher DISsimilarity, 
+            the inequalities for the best_cost computation are swapped.  
+            """
+            if ("min" in mode and cost > best_cost) or ("max" in mode and cost < best_cost):
                 best_cost = cost
                 best_permutation = perm
 

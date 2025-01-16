@@ -32,15 +32,27 @@ def find_optimal_ordering(task_grouping, similarity_matrix, mode, cost_function)
         if key in ['2', '4']:  # Skip large groups for CIFAR-100
             continue
 
+        """
+        IMPORTANT: 
+        min and max refer to minimizing and maximizing similarity, respectively. 
+        As larger values in the similarity matrix represent higher DISsimilarity, 
+        the inequalities for the best_cost computation are swapped.  
+        """
         if mode == 'min':
-            best_cost = float('inf')
-        else:
             best_cost = -float('inf')
+        else:
+            best_cost = float('inf')
 
         best_permutation = None
         for perm in tqdm(itertools.permutations(value)):
             cost = cost_function(perm, similarity_matrix)
-            if (mode == 'min' and cost < best_cost) or (mode == 'max' and cost > best_cost):
+            """
+            IMPORTANT: 
+            min and max refer to minimizing and maximizing similarity, respectively. 
+            As larger values in the similarity matrix represent higher DISsimilarity, 
+            the inequalities for the best_cost computation are swapped.  
+            """
+            if (mode == 'min' and cost > best_cost) or (mode == 'max' and cost < best_cost):
                 best_cost = cost
                 best_permutation = perm
 

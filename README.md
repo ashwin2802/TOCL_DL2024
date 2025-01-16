@@ -53,7 +53,7 @@ python similarity/CIFAR-100_compute_optimal_hierarchical_grouping.py
 
 **Note:**
 - Update the `path_to_similarity_matrix` variable in both scripts to point to the respective similarity matrix. Example paths are provided in the code.
-- Update the `path_to_opt_grouping` variable to include a placeholder `{}` for adapting the output file path with "min" or "max" to distinguish grouping by minimizing or maximizing the scores, respectively.
+- Update the `path_to_opt_grouping` variable to include a placeholder `{}` for adapting the output file path with "min" or "max" to distinguish grouping by minimizing or maximizing the similarity, respectively.
 
 ---
 
