@@ -1,0 +1,20 @@
+{
+    "res_file_template" : "./results/CIFAR-100_{}_classes_per_task_{}_similarity_{}_grouping_{}_ordering_{}_epochs_{}.json",
+    
+    "train_mb_size": 100, 
+    "test_mb_size": 100, 
+    "train_epochs": 30,
+    "classes_per_task": 8,
+    "num_classes": 50,
+    "shuffle_task_groups": true, 
+
+    "path_to_task_groups": "path/to/CIFAR-100/max/similarity/hierarchical/task/grouping/file.json",
+
+    "similarity_metric" : "cambridge_w_grad_prod",
+    "grouping" : "max_hierarchical",
+    "ordering" : "random", 
+
+    "ci_iterations": 10,
+
+    "model_name" : "task_aware_resnet-18-{}-{}" 
+}
